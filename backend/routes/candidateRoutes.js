@@ -1,11 +1,18 @@
+
+// const express = require('express');
+// const router = express.Router();
+// const { toggleCandidateStatus } = require('../controllers/candidateController');
+
+// // Route to toggle candidate status
+// router.post('/toggle-status', toggleCandidateStatus);
+
+// module.exports = router;
+
+
 const express = require('express');
 const router = express.Router();
-const candidateController = require('../controllers/candidateController');
+const { toggleCandidateStatus } = require('../controllers/candidateController'); // Adjust path as necessary
 
-// Define routes for candidates
-router.get('/', candidateController.getAllCandidates);
-router.post('/', candidateController.addCandidate);
-router.put('/:id', candidateController.updateCandidate);
-router.delete('/:id', candidateController.deleteCandidate);
+router.patch('/toggle-status', toggleCandidateStatus);
 
 module.exports = router;

@@ -1,45 +1,92 @@
-const knex = require('../db');
 
-// Get all candidates
-exports.getAllCandidates = async (req, res) => {
-  try {
-    const candidates = await knex('candidates').select('*');
-    res.json(candidates);
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching candidates', error: err });
-  }
-};
+// const knex = require('knex')(require('../knexfile').development);
 
-// Add a new candidate
-exports.addCandidate = async (req, res) => {
-  const { name, list_id, details } = req.body;
-  try {
-    const [newCandidate] = await knex('candidates').insert({ name, list_id, details }).returning('*');
-    res.json(newCandidate);
-  } catch (err) {
-    res.status(500).json({ message: 'Error adding candidate', error: err });
-  }
-};
+// async function toggleCandidateStatus(req, res) {
+//   const { circle, list, name, isActivate } = req.body;
 
-// Update a candidate
-exports.updateCandidate = async (req, res) => {
-  const { id } = req.params;
-  const { name, details } = req.body;
-  try {
-    const [updatedCandidate] = await knex('candidates').where({ id }).update({ name, details }).returning('*');
-    res.json(updatedCandidate);
-  } catch (err) {
-    res.status(500).json({ message: 'Error updating candidate', error: err });
-  }
-};
+//   try {
+//     // First, get the current status from the database
+//     const currentStatus = await knex('candidates')
+//       .where({ circle, list, name })
+//       .select('isActivate')
+//       .first();
 
-// Delete a candidate
-exports.deleteCandidate = async (req, res) => {
-  const { id } = req.params;
+//     if (!currentStatus) {
+//       return res.status(404).json({ error: 'Candidate not found' });
+//     }
+
+//     // If the current status in the database matches the request, no change is needed
+//     if (currentStatus.isActivate === isActivate) {
+//       return res.status(200).json({ isActivate: currentStatus.isActivate });
+//     }
+
+//     // If they don't match, update the status
+//     await knex('candidates')
+//       .where({ circle, list, name })
+//       .patch({ isActivate: !currentStatus.isActivate });
+
+//     // Fetch the updated status
+//     const updatedStatus = await knex('candidates')
+//       .where({ circle, list, name })
+//       .select('isActivate')
+//       .first();
+
+//     res.status(200).json({ isActivate: updatedStatus.isActivate });
+//   } catch (error) {
+//     console.error('Error updating candidate status:', error);
+//     res.status(500).json({ error: 'An error occurred while updating status' });
+//   }
+// }
+
+// module.exports = {
+//   toggleCandidateStatus,
+// };
+
+
+const knex = require('knex')(require('../knexfile').development);
+
+async function toggleCandidateStatus(req, res) {
+  const { circle, list, name, isActivate } = req.body;
+
   try {
-    await knex('candidates').where({ id }).del();
-    res.status(204).end();
-  } catch (err) {
-    res.status(500).json({ message: 'Error deleting candidate', error: err });
+    // Validate request body
+    if (!circle || !list || !name || typeof isActivate !== 'boolean') {
+      return res.status(400).json({ error: 'Invalid request data' });
+    }
+
+    // Get the current status from the database
+    const currentStatus = await knex('candidates')
+      .where({ circle, list, name })
+      .select('isActivate')
+      .first();
+
+    if (!currentStatus) {
+      return res.status(404).json({ error: 'Candidate not found' });
+    }
+
+    // Check if the current status matches the request
+    if (currentStatus.isActivate === isActivate) {
+      return res.status(200).json({ isActivate: currentStatus.isActivate });
+    }
+
+    // Update the candidate status
+    await knex('candidates')
+      .where({ circle, list, name })
+      .update({ isActivate: !currentStatus.isActivate });
+
+    // Fetch the updated status
+    const updatedStatus = await knex('candidates')
+      .where({ circle, list, name })
+      .select('isActivate')
+      .first();
+
+    res.status(200).json({ isActivate: updatedStatus.isActivate });
+  } catch (error) {
+    console.error('Error updating candidate status:', error);
+    res.status(500).json({ error: 'An error occurred while updating status' });
   }
+}
+
+module.exports = {
+  toggleCandidateStatus,
 };

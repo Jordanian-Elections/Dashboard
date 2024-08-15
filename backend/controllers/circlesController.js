@@ -1,60 +1,58 @@
-// controllers/circlesController.js
-const db = require('../db'); // Update this path if necessary
+const knex = require('knex')(require('../knexfile').development);
 
-// exports.getCircles = async (req, res) => {
-//   try {
-//     const circles = await db('circles').select('*');
-//     res.json(circles);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching circles', error });
-//   }
-// };
-
-
-exports.getCircles = async (req, res) => {
-    try {
-      const circles = await db('circles').select('*');
-      res.json(circles);
-    } catch (error) {
-      console.error('Error fetching circles:', error); // Log detailed error information
-      res.status(500).json({ message: 'Error fetching circles', error: error.message });
-    }
-  };
-exports.createCircle = async (req, res) => {
-  const { name, description, boundaries } = req.body;
+async function getCirclesListsCandidates(req, res) {
   try {
-    const [id] = await db('circles').insert({ name, description, boundaries });
-    res.status(201).json({ id, name, description, boundaries });
-  } catch (error) {
-    res.status(400).json({ message: 'Error creating circle', error });
-  }
-};
+    const result = await knex('local_lists')
+      .select('circle')
+      .distinct()
+      .orderBy('circle')
+      .then(async circles => {
+        const circlesWithLists = [];
 
-exports.updateCircle = async (req, res) => {
-  const { id } = req.params;
-  const { name, description, boundaries } = req.body;
-  try {
-    const count = await db('circles').where({ id }).update({ name, description, boundaries });
-    if (count) {
-      res.json({ id, name, description, boundaries });
-    } else {
-      res.status(404).json({ message: 'Circle not found' });
-    }
-  } catch (error) {
-    res.status(400).json({ message: 'Error updating circle', error });
-  }
-};
+        for (const circle of circles) {
+          const circleName = circle.circle;
 
-exports.deleteCircle = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const count = await db('circles').where({ id }).del();
-    if (count) {
-      res.status(204).end();
-    } else {
-      res.status(404).json({ message: 'Circle not found' });
-    }
+          // Fetch lists for the current circle
+          const lists = await knex('local_lists')
+            .select('list')
+            .where('circle', circleName)
+            .distinct()
+            .orderBy('list');
+
+          const listsWithCandidates = [];
+
+          for (const list of lists) {
+            const listName = list.list;
+
+            // Fetch candidates for the current list
+            const candidates = await knex('candidates')
+              .select('name')
+              .where('circle', circleName)
+              .andWhere('list', listName)
+              .orderBy('name');
+
+            listsWithCandidates.push({
+              list: listName,
+              candidates
+            });
+          }
+
+          circlesWithLists.push({
+            circle: circleName,
+            lists: listsWithCandidates
+          });
+        }
+
+        return circlesWithLists;
+      });
+
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting circle', error });
+    console.error('Error fetching circles, lists, and candidates:', error);
+    res.status(500).json({ error: 'An error occurred while fetching data' });
   }
+}
+
+module.exports = {
+  getCirclesListsCandidates
 };

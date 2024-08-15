@@ -1,67 +1,112 @@
-exports.seed = function(knex) {
+const bcrypt = require('bcryptjs');
+
+exports.seed = async function(knex) {
   // Deletes ALL existing entries
-  return knex('ads').del()
-    .then(() => knex('votes').del())
-    .then(() => knex('candidates').del())
-    .then(() => knex('local_list_candidate').del())
-    .then(() => knex('local_lists').del())
-    .then(() => knex('party_lists').del())
-    .then(() => knex('elections').del())
-    .then(() => knex('users').del())
-    .then(() => knex('admins').del())
-    .then(() => {
-      // Inserts seed entries
-      return knex('admins').insert([
-        { id: 1, name: 'Admin One', email: 'admin1@example.com', password: 'password123', is_active: true },
-        { id: 2, name: 'Admin Two', email: 'admin2@example.com', password: 'password123', is_active: true }
-      ]);
-    })
-    .then(() => {
-      return knex('users').insert([
-        { national_id: 123456789, email: 'user1@example.com', name: 'User One', city: 'City A', circle: 'Circle A', isVotedcircle: false, isVotedparty: false, password: 'password123', role: 'voter', isApproved: true, Whitepaper: null, type: 'مسلم', gender: 'male', isActivate: true },
-        { national_id: 987654321, email: 'user2@example.com', name: 'User Two', city: 'City B', circle: 'Circle B', isVotedcircle: false, isVotedparty: false, password: 'password123', role: 'candidate', isApproved: false, Whitepaper: 1, type: 'مسيحي', gender: 'female', isActivate: true }
-      ]);
-    })
-    .then(() => {
-      return knex('elections').insert([
-        { id: 1, name: 'Local Election 2024', start_date: '2024-01-01', end_date: '2024-01-10', type: 'local', status: 'upcoming' },
-        { id: 2, name: 'Party Election 2024', start_date: '2024-02-01', end_date: '2024-02-10', type: 'party', status: 'upcoming' }
-      ]);
-    })
-    .then(() => {
-      return knex('party_lists').insert([
-        { id: 1, name: 'Party List A', slogan: 'For a Better Tomorrow', election_id: 2 },
-        { id: 2, name: 'Party List B', slogan: 'Unity and Progress', election_id: 2 }
-      ]);
-    })
-    .then(() => {
-      return knex('local_lists').insert([
-        { id: 1, city: 'City A', circle: 'Circle A', list: 'List A1', name: 'Candidate A1', votes: 0 },
-        { id: 2, city: 'City B', circle: 'Circle B', list: 'List B1', name: 'Candidate B1', votes: 0 }
-      ]);
-    })
-    .then(() => {
-      return knex('local_list_candidate').insert([
-        { id: 1, candidate_national_id: 123456789, city: 'City A', party: 'Party A', slogan: 'Vote for Change', list_votes: 0, is_nominated: true, candidate_votes: 0, type: 'مسلم' },
-        { id: 2, candidate_national_id: 987654321, city: 'City B', party: 'Party B', slogan: 'Progress for All', list_votes: 0, is_nominated: true, candidate_votes: 0, type: 'مسيحي' }
-      ]);
-    })
-    .then(() => {
-      return knex('candidates').insert([
-        { id: 1, name: 'Candidate A1', city: 'City A', list: 'List A1', circle: 'Circle A', circle_list: 'Party List A', candidate_votes: 0, gender: 'male', type: 'مسلم', candidate_national_id: 123456789 },
-        { id: 2, name: 'Candidate B1', city: 'City B', list: 'List B1', circle: 'Circle B', circle_list: 'Party List B', candidate_votes: 0, gender: 'female', type: 'مسيحي', candidate_national_id: 987654321 }
-      ]);
-    })
-    .then(() => {
-      return knex('votes').insert([
-        { id: 1, voter_id: 123456789, election_id: 1, party_list_id: null, local_list_id: 1, vote_date: new Date() },
-        { id: 2, voter_id: 987654321, election_id: 1, party_list_id: 1, local_list_id: null, vote_date: new Date() }
-      ]);
-    })
-    .then(() => {
-      return knex('ads').insert([
-        { id: 1, candidate_id: 1, content: 'Ad content for Candidate A1', price: 100.00, start_date: '2024-01-01', end_date: '2024-01-10', status: 'active' },
-        { id: 2, candidate_id: 2, content: 'Ad content for Candidate B1', price: 150.00, start_date: '2024-02-01', end_date: '2024-02-10', status: 'active' }
-      ]);
-    });
+  await knex('ads').del();
+  await knex('votes').del();
+  await knex('payments').del();
+  await knex('whitepaper').del();
+  await knex('candidates').del();
+  await knex('local_list_candidates').del();
+  await knex('local_lists').del();
+  await knex('party_lists').del();
+  await knex('elections').del();
+  await knex('users').del();
+  await knex('admins').del();
+  await knex('electoral_districts').del();
+
+  // Inserts seed entries
+  await knex('electoral_districts').insert([
+    { id: 1, name: 'عمان' },
+    { id: 2, name: 'الزرقاء' },
+    { id: 3, name: 'إربد' },
+    { id: 4, name: 'المفرق' },
+    { id: 5, name: 'الكرك' },
+    { id: 6, name: 'الطفيلة' },
+    { id: 7, name: 'الرمثا' }
+  ]);
+
+  await knex('admins').insert([
+    {
+      name: 'Areej Omar Abumuhfouz',
+      email: 'Areej@gmail.com',
+      password: bcrypt.hashSync('Areej123', 10), // Hashed password
+      role: 'super',
+      is_active: true,
+    },
+    {
+      name: 'Othman Daoud',
+      email: 'Othman@gmail.com',
+      password: bcrypt.hashSync('Othman123', 10), // Hashed password
+      role: 'admin',
+      is_active: true,
+    },
+    {
+      name: 'Tasneem Abuarqop',
+      email: 'Tasneem@gmail.com',
+      password: bcrypt.hashSync('Tasneem123', 10), // Hashed password
+      role: 'admin',
+      is_active: true,
+    },
+    {
+      name: 'AbedAlmajeed',
+      email: 'AbedAlmajeed@gmail.com',
+      password: bcrypt.hashSync('AbedAlmajeed123', 10), // Hashed password
+      role: 'admin',
+      is_active: true,
+    },
+    {
+      name: 'Omar',
+      email: 'Omar@gmail.com',
+      password: bcrypt.hashSync('Omar123', 10), // Hashed password
+      role: 'admin',
+      is_active: true,
+    }
+  ]);
+
+  await knex('users').insert([
+    { id: 1, national_id: 123456789, email: 'mohammed.jordan@example.com', name: 'محمد الاردني', city: 'عمان', circle: 'الدوار الأول', isVotedcircle: false, isVotedparty: false, password: bcrypt.hashSync('hashedpassword', 10), role: 'voter', isApproved: true, Whitepaper: 0, type: 'مسلم', gender: 'male', isActivate: true, otp: null, electoral_district_id: 1 },
+    { id: 2, national_id: 987654321, email: 'sarah.jordan@example.com', name: 'سارة الأردنية', city: 'إربد', circle: 'المدينة', isVotedcircle: true, isVotedparty: false, password: bcrypt.hashSync('hashedpassword', 10), role: 'candidate', isApproved: true, Whitepaper: 1, type: 'مسيحي', gender: 'female', isActivate: true, otp: null, electoral_district_id: 3 }
+  ]);
+
+  await knex('elections').insert([
+    { id: 1, name: 'انتخابات 2024', start_date: '2024-11-01', end_date: '2024-11-30', type: 'local', status: 'upcoming' },
+    { id: 2, name: 'انتخابات الحزب 2024', start_date: '2024-12-01', end_date: '2024-12-31', type: 'party', status: 'upcoming' }
+  ]);
+
+  await knex('party_lists').insert([
+    { id: 1, name: 'قائمة الحزب الوطني', slogan: 'الأفضل للأردن', election_id: 2 },
+    { id: 2, name: 'قائمة التغيير', slogan: 'نحو التقدم', election_id: 2 }
+  ]);
+
+  await knex('local_lists').insert([
+    { id: 1, city: 'عمان', circle: 'الدوار الأول', list: 'قائمة عمان', name: 'أحمد الشاب', votes: 150 },
+    { id: 2, city: 'إربد', circle: 'المدينة', list: 'قائمة إربد', name: 'سلمى الكردي', votes: 200 }
+  ]);
+
+  await knex('local_list_candidates').insert([
+    { id: 1, candidate_national_id: 123456789, city: 'عمان', party: 'الحزب الوطني', slogan: 'الأفضل للمدينة', list_votes: 100, is_nominated: true, candidate_votes: 50, type: 'مسلم' },
+    { id: 2, candidate_national_id: 987654321, city: 'إربد', party: 'التغيير', slogan: 'نحو الأفضل', list_votes: 120, is_nominated: true, candidate_votes: 80, type: 'مسيحي' }
+  ]);
+
+  await knex('candidates').insert([
+    { id: 1, name: 'أحمد الشاب', city: 'عمان', list: 'قائمة عمان', circle: 'الدوار الأول', circle_list: 'قائمة الحزب الوطني', candidate_votes: 50, list_votes: 100, gender: 'male', type: 'مسلم', candidate_national_id: 123456789 },
+    { id: 2, name: 'سلمى الكردي', city: 'إربد', list: 'قائمة إربد', circle: 'المدينة', circle_list: 'قائمة التغيير', candidate_votes: 80, list_votes: 120, gender: 'female', type: 'مسيحي', candidate_national_id: 987654321 }
+  ]);
+
+  await knex('whitepaper').insert([
+    { id: 1, locallist: 1, partylist: 2, total_count: 3 }
+  ]);
+
+  await knex('payments').insert([
+    { id: 1, stripe_payment_id: 'pay_1234567890', amount: 100.00, currency: 'JOD', status: 'completed', created_at: new Date() }
+  ]);
+
+  await knex('votes').insert([
+    { id: 1, voter_id: 123456789, election_id: 1, party_list_id: 1, local_list_id: 1, vote_date: new Date() }
+  ]);
+
+  await knex('ads').insert([
+    { id: 1, candidate_id: 1, content: 'إعلان دعم أحمد الشاب', price: 500.00, start_date: '2024-10-01', end_date: '2024-10-31', status: 'active' }
+  ]);
 };

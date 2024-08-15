@@ -15,9 +15,9 @@ function AdminDashboard() {
       <Sidebar />
       <div className="flex-1 overflow-x-hidden overflow-y-auto">
         <Routes>
-          <Route path="AdminPage" element={<AdminPage />} />
+          <Route path="/AdminPage" element={<AdminPage />} />
           <Route path="/" element={<Overview />} />
-          <Route path="UserManagement" element={<UserManagement />} />
+          <Route path="/UserManagement" element={<UserManagement />} />
           <Route path="elections" element={<ElectionManagement />} /> 
           <Route path="ElectionsCircle" element={<ElectionsCircle />} /> 
         </Routes>

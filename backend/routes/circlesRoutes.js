@@ -1,11 +1,9 @@
-// routes/circlesRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const circlesController = require('../controllers/circlesController');
+const { getCirclesListsCandidates } = require('../controllers/circlesController');
 
-router.get('/', circlesController.getCircles);
-router.post('/', circlesController.createCircle);
-router.put('/:id', circlesController.updateCircle);
-router.delete('/:id', circlesController.deleteCircle);
+// Route to get circles, lists, and candidates
+router.get('/circles-lists-candidates', getCirclesListsCandidates);
 
 module.exports = router;
