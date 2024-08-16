@@ -1,6 +1,5 @@
 
 
-// // server.js
 // require('dotenv').config();
 // const express = require('express');
 // const cors = require('cors');
@@ -8,95 +7,136 @@
 // const knexConfig = require('./knexfile');
 // const jwt = require('jsonwebtoken');
 // const bcrypt = require('bcryptjs');
+// const Stripe = require('stripe');
+// const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// const adminRoutes = require('./routes/adminRoutes');
-// const userRoutes = require('./routes/userRoutes');
+// // Import routes
+// const adminRoutes = require('./routes/adminsRoutes.js');
 // const listRoutes = require('./routes/listRoutes');
-// // const candidateRoutes = require('./routes/candidateRoutes');
-// const circleRoutes = require('./routes/circlesRoutes');
-// // const circleRoutes = require('./routes/circlesRoutes');
 // const candidateRoutes = require('./routes/candidateRoutes');
+// const statsRoutes = require('./routes/statsRoutes');
+// const circleRoutes = require('./routes/circlesRoutes');
+// const loginRoutes = require('./routes/loginRoutes.js');
+// const userRoutes = require('./routes/userRoutes');
 
+
+// // Initialize app and database
 // const app = express();
 // const db = knex(knexConfig.development);
 
 // app.use(cors());
 // app.use(express.json());
-
 // app.use(express.urlencoded({ extended: true }));
-// function authenticateToken(req, res, next) {
-//   const token = req.header('Authorization');
-//   if (!token) return res.status(401).json({ message: 'Access Denied' });
 
-//   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-//     if (err) return res.status(403).json({ message: 'Invalid Token' });
-//     req.user = user;
-//     next();
-//   });
-// }
+// // // Authentication Middleware
+// // function authenticateToken(req, res, next) {
+// //   const token = req.header('Authorization');
+// //   if (!token) return res.status(401).json({ message: 'Access Denied' });
 
-// // Login Route
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-//   const admin = await knex('admins').where({ email }).first();
+// //   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+// //     if (err) return res.status(403).json({ message: 'Invalid Token' });
+// //     req.user = user;
+// //     next();
+// //   });
+// // }
 
-//   if (!admin || !(await bcrypt.compare(password, admin.password))) {
-//     return res.status(400).json({ message: 'Invalid email or password' });
-//   }
+// // // Login Route
+// // app.post('/login', async (req, res) => {
+// //   const { email, password } = req.body;
+// //   const admin = await db('admins').where({ email }).first();
 
-//   const token = jwt.sign({ id: admin.id, role: admin.role }, process.env.JWT_SECRET, {
-//     expiresIn: '1h',
-//   });
+// //   if (!admin || !(await bcrypt.compare(password, admin.password))) {
+// //     return res.status(400).json({ message: 'Invalid email or password' });
+// //   }
 
-//   res.json({ token, role: admin.role });
-// });
+// //   const token = jwt.sign({ id: admin.id, role: admin.role }, process.env.JWT_SECRET, {
+// //     expiresIn: '1h',
+// //   });
 
-// // Get Admins (Super Admin Only)
-// app.get('/admins', authenticateToken, async (req, res) => {
-//   if (req.user.role !== 'super') {
-//     return res.status(403).json({ message: 'Access Denied' });
-//   }
+// //   res.json({  token,
+// //     role: admin.role,
+// //     name: admin.name  });
+// // });
 
-//   const admins = await knex('admins').select('id', 'name', 'email', 'role', 'is_active');
-//   res.json(admins);
-// });
+// // // Get Admins (Super Admin Only)
+// // app.get('/admins', authenticateToken, async (req, res) => {
+// //   if (req.user.role !== 'super') {
+// //     return res.status(403).json({ message: 'Access Denied' });
+// //   }
 
-// // Update Admin (Super Admin Only)
-// app.put('/admins/:id', authenticateToken, async (req, res) => {
-//   if (req.user.role !== 'super') {
-//     return res.status(403).json({ message: 'Access Denied' });
-//   }
+// //   const admins = await db('admins').select('id', 'name', 'email', 'role', 'is_active');
+// //   res.json(admins);
+// // });
 
-//   const { id } = req.params;
-//   const { name, email, password, role, is_active } = req.body;
+// // // Update Admin (Super Admin Only)
+// // app.put('/admins/:id', authenticateToken, async (req, res) => {
+// //   if (req.user.role !== 'super') {
+// //     return res.status(403).json({ message: 'Access Denied' });
+// //   }
 
-//   const updatedAdmin = {
-//     name,
-//     email,
-//     role,
-//     is_active,
-//   };
+// //   const { id } = req.params;
+// //   const { name, email, password, role, is_active } = req.body;
 
-//   if (password) {
-//     updatedAdmin.password = await bcrypt.hash(password, 10);
-//   }
+// //   const updatedAdmin = {
+// //     name,
+// //     email,
+// //     role,
+// //     is_active,
+// //   };
 
-//   await knex('admins').where({ id }).update(updatedAdmin);
-//   res.json({ message: 'Admin updated successfully' });
-// });
-// // Use the routes
+// //   if (password) {
+// //     updatedAdmin.password = await bcrypt.hash(password, 10);
+// //   }
+
+// //   await db('admins').where({ id }).update(updatedAdmin);
+// //   res.json({ message: 'Admin updated successfully' });
+// // });
+
+// // Use routes
 // app.use('/api/admin', adminRoutes);
-// app.use('/api/users', userRoutes);
+// app.use('/api', userRoutes); 
 // app.use('/api/lists', listRoutes);
 // app.use('/api/candidates', candidateRoutes);
 // app.use('/api/circles', circleRoutes);
-// const Stripe = require('stripe');
-// const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-// app.use('/api/candidates', candidateRoutes);
-// // app.use('/candidates', candidateRoutes);
+// app.use('/api/stats', statsRoutes);
+// app.use('/api/login', loginRoutes);
 
 
+// // app.get('/api/revenue', async (req, res) => {
+// //   try {
+// //     const revenueData = await knex('payments')
+// //       .select('created_at', 'amount', 'currency')
+// //       .orderBy('created_at', 'desc');
+    
+// //     // Format the data if necessary (e.g., group by month)
+// //     // ...
 
+// //     res.json(revenueData);
+// //   } catch (error) {
+// //     console.error('Error fetching revenue data:', error);
+// //     res.status(500).json({ error: 'An error occurred while fetching revenue data' });
+// //   }
+// // });
+
+// app.get('/api/revenue', async (req, res) => {
+//   try {
+//     // Query to fetch revenue data from 'payments' table
+//     const revenueData = await knex('payments')
+//       .select('created_at', 'amount', 'currency')
+//       .orderBy('created_at', 'desc');
+
+//     // Process data if necessary
+//     // For example, you might want to aggregate data by month or currency
+
+//     res.json(revenueData); // Send data as JSON response
+//   } catch (error) {
+//     console.error('Error fetching revenue data:', error);
+//     res.status(500).json({ error: 'An error occurred while fetching revenue data' });
+//   }
+// });
+
+
+// // Create Payment Intent
 // app.post('/create-payment-intent', async (req, res) => {
 //   const { amount, currency } = req.body;
 
@@ -126,6 +166,7 @@
 //   }
 // });
 
+
 // // Start server
 // const PORT = process.env.PORT || 3001;
 // app.listen(PORT, () => {
@@ -144,11 +185,14 @@ const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Import routes
-const adminRoutes = require('./routes/adminRoutes');
-const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminsRoutes.js');
 const listRoutes = require('./routes/listRoutes');
-const circleRoutes = require('./routes/circlesRoutes');
 const candidateRoutes = require('./routes/candidateRoutes');
+const statsRoutes = require('./routes/statsRoutes');
+const circleRoutes = require('./routes/circlesRoutes');
+const loginRoutes = require('./routes/loginRoutes.js');
+const userRoutes = require('./routes/userRoutes');
+const requestRoutes = require('./routes/requestRoutes');
 
 // Initialize app and database
 const app = express();
@@ -183,9 +227,11 @@ app.post('/login', async (req, res) => {
     expiresIn: '1h',
   });
 
-  res.json({  token,
+  res.json({
+    token,
     role: admin.role,
-    name: admin.name  });
+    name: admin.name,
+  });
 });
 
 // Get Admins (Super Admin Only)
@@ -224,10 +270,27 @@ app.put('/admins/:id', authenticateToken, async (req, res) => {
 
 // Use routes
 app.use('/api/admin', adminRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api', userRoutes); 
 app.use('/api/lists', listRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/circles', circleRoutes);
+app.use('/api/stats', statsRoutes);
+app.use('/api/login', loginRoutes);
+app.use('/api/requests', requestRoutes);
+
+// Fetch Revenue Data
+app.get('/api/revenue', async (req, res) => {
+  try {
+    const revenueData = await db('payments')
+      .select('created_at', 'amount', 'currency')
+      .orderBy('created_at', 'desc');
+
+    res.json(revenueData);
+  } catch (error) {
+    console.error('Error fetching revenue data:', error);
+    res.status(500).json({ error: 'An error occurred while fetching revenue data' });
+  }
+});
 
 // Create Payment Intent
 app.post('/create-payment-intent', async (req, res) => {

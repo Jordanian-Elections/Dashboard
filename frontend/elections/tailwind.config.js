@@ -14,7 +14,8 @@ export default {
       },
       colors: {
         zait: "#3F7A5E",
-        gray: {
+        zait1: "rgba(63,122,94, 0.2)",
+                gray: {
           50: '#f9fafb',
           200: '#e5e7eb',
           300: '#d1d5db',

@@ -8,6 +8,9 @@ import UserManagement from './UserManagement';
 import ElectionManagement from './ElectionManagement';
 import AdminPage from './AdminPage';
 import ElectionsCircle from './ElectionsCircle';
+import Revenu from './Revenu';
+import Request from './Request';
+
 
 function AdminDashboard() {
   return (
@@ -20,6 +23,8 @@ function AdminDashboard() {
           <Route path="/UserManagement" element={<UserManagement />} />
           <Route path="elections" element={<ElectionManagement />} /> 
           <Route path="ElectionsCircle" element={<ElectionsCircle />} /> 
+          <Route path="/Revenu" element={<Revenu />} /> 
+          <Route path="/Request" element={<Request />} /> 
         </Routes>
       </div>
     </div>

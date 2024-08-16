@@ -1,47 +1,4 @@
 
-// const knex = require('knex')(require('../knexfile').development);
-
-// async function toggleCandidateStatus(req, res) {
-//   const { circle, list, name, isActivate } = req.body;
-
-//   try {
-//     // First, get the current status from the database
-//     const currentStatus = await knex('candidates')
-//       .where({ circle, list, name })
-//       .select('isActivate')
-//       .first();
-
-//     if (!currentStatus) {
-//       return res.status(404).json({ error: 'Candidate not found' });
-//     }
-
-//     // If the current status in the database matches the request, no change is needed
-//     if (currentStatus.isActivate === isActivate) {
-//       return res.status(200).json({ isActivate: currentStatus.isActivate });
-//     }
-
-//     // If they don't match, update the status
-//     await knex('candidates')
-//       .where({ circle, list, name })
-//       .patch({ isActivate: !currentStatus.isActivate });
-
-//     // Fetch the updated status
-//     const updatedStatus = await knex('candidates')
-//       .where({ circle, list, name })
-//       .select('isActivate')
-//       .first();
-
-//     res.status(200).json({ isActivate: updatedStatus.isActivate });
-//   } catch (error) {
-//     console.error('Error updating candidate status:', error);
-//     res.status(500).json({ error: 'An error occurred while updating status' });
-//   }
-// }
-
-// module.exports = {
-//   toggleCandidateStatus,
-// };
-
 
 const knex = require('knex')(require('../knexfile').development);
 

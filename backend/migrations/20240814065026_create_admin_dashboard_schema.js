@@ -139,6 +139,43 @@ exports.up = function(knex) {
       });
     })
     .then(() => {
+      return knex.schema.createTable('party_election_requests', function(table) {
+        table.increments('id').primary();
+        table.integer('national_id', 10).notNullable();
+        table.foreign('national_id').references('users.national_id');
+        table.string('party_list_name').notNullable();
+        table.boolean('is_deleted').defaultTo(false);
+        table.timestamps(true, true);
+      });
+    })
+
+.then(() => {
+  return knex.schema.createTable('local_election_requests', table => {
+    table.increments('id').primary();
+    table.integer('national_id').notNullable(); // Change to integer
+    table.foreign('national_id').references('users.national_id');
+    table.string('local_list_name').notNullable();
+    table.json('members').notNullable();
+    table.boolean('is_deleted').defaultTo(false); 
+    table.timestamps(true, true);
+  });
+})
+
+
+.then(() => {
+  return knex.schema.createTable('contact_request', table => {
+    table.increments('id').primary();
+    table.string('contact_name', 20);
+    table.integer('contact_national_id').unsigned().notNullable().references('national_id').inTable('users').onDelete('CASCADE');
+    table.string('phone', 20);
+    table.string('subject', 200);
+    table.text('message');
+    table.timestamps(true, true);
+  });
+})
+
+
+    .then(() => {
       return knex.schema.createTable('votes', table => {
         table.increments('id').primary();
         table.integer('voter_id').notNullable();
@@ -171,16 +208,20 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists('ads')
-    .dropTableIfExists('votes')
-    .dropTableIfExists('payments')
-    .dropTableIfExists('whitepaper')
-    .dropTableIfExists('candidates')
-    .dropTableIfExists('local_list_candidates')
-    .dropTableIfExists('local_lists')
-    .dropTableIfExists('party_lists')
-    .dropTableIfExists('elections')
-    .dropTableIfExists('users')
-    .dropTableIfExists('admins')
-    .dropTableIfExists('electoral_districts'); // Ensure electoral_districts is dropped last
+  .dropTableIfExists('ads')
+  .dropTableIfExists('votes')
+  .dropTableIfExists('contact_request')
+  .dropTableIfExists('local_election_requests')
+  .dropTableIfExists('party_election_requests')
+  .dropTableIfExists('payments')
+  .dropTableIfExists('whitepaper')
+  .dropTableIfExists('candidates')
+  .dropTableIfExists('local_list_candidates')
+  .dropTableIfExists('local_lists')
+  .dropTableIfExists('party_lists')
+  .dropTableIfExists('elections')
+  .dropTableIfExists('users')
+  .dropTableIfExists('admins')
+  .dropTableIfExists('electoral_districts');
+    
 };

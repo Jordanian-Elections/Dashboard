@@ -1,169 +1,12 @@
 
 
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import { motion } from 'framer-motion';
-// import { FaSearch, FaFilter, FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-// const UserManagementPage = () => {
-//   const [users, setUsers] = useState([]);
-//   const [search, setSearch] = useState('');
-//   const [role, setRole] = useState('');
-//   const [page, setPage] = useState(1);
-//   const [pageSize] = useState(10);
-//   const [total, setTotal] = useState(0);
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const delayDebounceFn = setTimeout(() => {
-//       fetchUsers();
-//     }, 300);
-
-//     return () => clearTimeout(delayDebounceFn);
-//   }, [search, role, page]);
-
-//   const fetchUsers = async () => {
-//     setLoading(true);
-//     setError(null);
-//     try {
-//       const response = await axios.get('http://localhost:3001/api/users', {
-//         params: { search, role, page, pageSize },
-//       });
-//       setUsers(response.data.users);
-//       setTotal(response.data.total);
-//     } catch (error) {
-//       setError('Error fetching users. Please try again later.');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="user-management-page p-6">
-//       <h1 className="text-2xl font-semibold mb-4 text-center">إدارة المستخدمين</h1>
-
-//       {error && (
-//         <motion.div
-//           initial={{ opacity: 0 }}
-//           animate={{ opacity: 1 }}
-//           transition={{ duration: 0.5 }}
-//           className="bg-red-100 text-red-700 p-4 mb-4 rounded"
-//         >
-//           {error}
-//         </motion.div>
-//       )}
-//       {loading && (
-//         <motion.div
-//           initial={{ opacity: 0 }}
-//           animate={{ opacity: 1 }}
-//           transition={{ duration: 0.5 }}
-//           className="text-gray-500 mb-4 text-center"
-//         >
-//           Loading...
-//         </motion.div>
-//       )}
-
-//       <div className="filters mb-4 flex items-center justify-between">
-//         <div className="flex items-center border rounded-lg">
-//           <input
-//             type="text"
-//             placeholder="ابحث بالاسم"
-//             value={search}
-//             onChange={(e) => setSearch(e.target.value)}
-//             className="border-none p-2 rounded-l-lg focus:outline-none"
-//             aria-label="Search by name"
-//           />
-//           <FaSearch className="text-gray-500 p-2" />
-//         </div>
-//         <div className="flex items-center border rounded-lg">
-//           <select
-//             value={role}
-//             onChange={(e) => setRole(e.target.value)}
-//             className="border-none p-2 rounded-l-lg focus:outline-none"
-//             aria-label="Filter by role"
-//           >
-//             <option value="">كل الأدوار</option>
-//             <option value="voter">ناخب</option>
-//             <option value="candidate">مرشح</option>
-//             <option value="admin">مدير</option>
-//           </select>
-//           <FaFilter className="text-gray-500 p-2" />
-//         </div>
-//         <button
-//           onClick={() => setPage(1)}
-//           className="bg-blue-500 text-white p-2 rounded-lg flex items-center"
-//         >
-//           <FaFilter className="mr-2" />
-//           تصفية
-//         </button>
-//       </div>
-
-//       <motion.table
-//       className="w-full border border-gray-200 mb-4 rounded-lg even:bg-red-500"
-//       initial={{ opacity: 0 }}
-//       animate={{ opacity: 1 }}
-//       transition={{ duration: 0.5 }}
-//     >
-//       <thead className="bg-gray-100">
-//         <tr>
-//           <th className="py-2 px-4 border-b">الرقم</th>
-//           <th className="py-2 px-4 border-b">الاسم</th>
-//           <th className="py-2 px-4 border-b">البريد الإلكتروني</th>
-//           <th className="py-2 px-4 border-b">الدور</th>
-//           {/* Removed "الإجراءات" header */}
-//         </tr>
-//       </thead>
-//       <tbody>
-//         {users.map((user, index) => (
-//           <motion.tr
-//             key={user.id}
-//             whileHover={{ scale: 1.02 }}
-//             transition={{ duration: 0.2 }}
-//             className={` ${index % 2 === 1 ? 'bg-red-500' : ''}`}
-//           >
-//             <td className="py-2 px-4 border-b">{user.id}</td>
-//             <td className="py-2 px-4 border-b">{user.name}</td>
-//             <td className="py-2 px-4 border-b">{user.email}</td>
-//             <td className="py-2 px-4 border-b">{user.role}</td>
-//             {/* Removed actions cells */}
-//           </motion.tr>
-//         ))}
-//       </tbody>
-//     </motion.table>
-
-//       <div className="pagination flex justify-between items-center mt-4 ">
-//         <button
-//           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-//           disabled={page === 1}
-//           className="bg-gray-300 p-2 rounded-lg text-gray-700"
-//         >
-//           السابق
-//         </button>
-//         <span className="text-gray-700">
-//           صفحة {page} من {Math.ceil(total / pageSize)}
-//         </span>
-//         <button
-//           onClick={() =>
-//             setPage((prev) => (total > prev * pageSize ? prev + 1 : prev))
-//           }
-//           disabled={page * pageSize >= total}
-//           className="bg-gray-300 p-2 rounded-lg text-gray-700"
-//         >
-//           التالي
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default UserManagementPage;
-
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { motion } from 'framer-motion';
-import { FaSearch, FaFilter, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaSearch, FaFilter, FaEdit, FaTimes } from 'react-icons/fa';
+import { debounce } from 'lodash';
+// import debounce from 'lodash.debounce';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
@@ -178,15 +21,7 @@ const UserManagementPage = () => {
   const [city, setCity] = useState('');
   const [circle, setCircle] = useState('');
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      fetchUsers();
-    }, 300);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [search, role, page]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -196,16 +31,22 @@ const UserManagementPage = () => {
       setUsers(response.data.users);
       setTotal(response.data.total);
     } catch (error) {
-      setError('Error fetching users. Please try again later.');
+      setError('خطأ في جلب بيانات المستخدمين. يرجى المحاولة مرة أخرى لاحقًا.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, role, page, pageSize]);
+
+  useEffect(() => {
+    const debouncedFetchUsers = debounce(fetchUsers, 300);
+    debouncedFetchUsers();
+    return () => debouncedFetchUsers.cancel();
+  }, [fetchUsers]);
 
   const handleEdit = (user) => {
     setEditingUser(user);
-    setCity(user.city);
-    setCircle(user.circle);
+    setCity(user.city || '');
+    setCircle(user.circle || '');
   };
 
   const handleSave = async () => {
@@ -217,175 +58,222 @@ const UserManagementPage = () => {
       fetchUsers();
       setEditingUser(null);
     } catch (error) {
-      setError('Error updating user. Please try again later.');
+      setError('خطأ في تحديث بيانات المستخدم. يرجى المحاولة مرة أخرى لاحقًا.');
     }
   };
 
-  return (
-    <div className="user-management-page p-6">
-      <h1 className="text-2xl font-semibold mb-4 text-center">إدارة المستخدمين</h1>
+  const handleCloseModal = () => {
+    setEditingUser(null);
+    setCity('');
+    setCircle('');
+  };
 
-      {error && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="bg-red-100 text-red-700 p-4 mb-4 rounded"
-        >
-          {error}
-        </motion.div>
-      )}
+  return (
+    <div className="user-management-page p-4 md:p-6 lg:p-8 bg-gray-100 min-h-screen">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-3xl font-bold mb-6 text-center text-zait"
+      >
+        إدارة المستخدمين
+      </motion.h1>
+
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="bg-red-100 text-red-700 p-4 mb-4 rounded-lg shadow"
+          >
+            {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {loading && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
           className="text-gray-500 mb-4 text-center"
         >
-          Loading...
+          جاري التحميل...
         </motion.div>
       )}
 
-      <div className="filters mb-4 flex items-center justify-between">
-        <div className="flex items-center border rounded-lg">
+      <div className="filters mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center border rounded-lg bg-white shadow-md w-full md:w-auto"
+        >
           <input
             type="text"
             placeholder="ابحث بالاسم"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border-none p-2 rounded-l-lg focus:outline-none"
-            aria-label="Search by name"
+            className="border-none p-3 rounded-l-lg focus:outline-none w-full"
+            aria-label="البحث بالاسم"
           />
-          <FaSearch className="text-gray-500 p-2" />
-        </div>
-        <div className="flex items-center border rounded-lg">
+          <FaSearch className="text-gray-500 p-3" />
+        </motion.div>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center border rounded-lg bg-white shadow-md w-full md:w-auto"
+        >
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="border-none p-2 rounded-l-lg focus:outline-none"
-            aria-label="Filter by role"
+            className="border-none p-3 rounded-l-lg focus:outline-none w-full appearance-none"
+            aria-label="تصفية حسب الدور"
           >
-            <option value="">كل الأدوار</option>
+            <option value="" className=''>كل الأدوار</option>
             <option value="voter">ناخب</option>
             <option value="candidate">مرشح</option>
-            <option value="admin">مدير</option>
+            {/* <option value="admin">مدير</option> */}
           </select>
-          <FaFilter className="text-gray-500 p-2" />
-        </div>
-        <button
-          onClick={() => setPage(1)}
-          className="bg-blue-500 text-white p-2 rounded-lg flex items-center"
-        >
-          <FaFilter className="mr-2" />
-          تصفية
-        </button>
+          <FaFilter className="text-gray-500 p-3" />
+        </motion.div>
       </div>
 
-      <motion.table
-        className="w-full border border-gray-200 mb-4 rounded-lg"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="py-2 px-4 border-b">الرقم</th>
-            <th className="py-2 px-4 border-b">الاسم</th>
-            <th className="py-2 px-4 border-b">البريد الإلكتروني</th>
-            <th className="py-2 px-4 border-b">الدور</th>
-            <th className="py-2 px-4 border-b">المدينة</th>
-            <th className="py-2 px-4 border-b">المنطقة</th>
-            <th className="py-2 px-4 border-b">إجراءات</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, index) => (
-            <motion.tr
-              key={user.id}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-              className={` ${index % 2 === 1 ? 'bg-gray-100' : ''}`}
+      <div className="overflow-x-auto">
+        <motion.table
+          className="w-full border-collapse bg-white shadow-lg rounded-lg overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <thead className="bg-gray-400">
+            <tr>
+              <th className="py-3 pl-20 text-left text-zait">الرقم</th>
+              <th className="py-3 pl-20 text-left text-zait">الاسم</th>
+              <th className="py-3 pl-32 text-left text-zait">البريد الإلكتروني</th>
+              <th className="py-3 pl-20 text-left text-zait">الدور</th>
+              <th className="py-3 pl-20 text-left text-zait">المدينة</th>
+              <th className="py-3 pl-20 text-left text-zait">الدائرة</th>
+              <th className="py-3 pl-20 text-left text-zait">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody className=''>
+            {users.map((user, index) => (
+              <motion.tr
+                key={user.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.05 }}
+                // whileHover={{ backgroundColor: '#f3f4f6' }}
+                className="border-b border-gray-200 last:border-b-0 even:bg-gray-200 "
+              >
+                <td className="py-3 px-4">{user.id}</td>
+                <td className="py-3 px-4">{user.name}</td>
+                <td className="py-3 px-4">{user.email}</td>
+                <td className="py-3 px-4">{user.role}</td>
+                <td className="py-3 px-4">{user.city}</td>
+                <td className="py-3 px-4">{user.circle}</td>
+                <td className="py-3 px-4">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleEdit(user)}
+                    className="bg-zait hover:bg-gray-600 text-white p-2 rounded-lg flex items-center transition duration-300"
+                  >
+                    <FaEdit className="mr-2" />
+                    تعديل
+                  </motion.button>
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </motion.table>
+      </div>
+
+      <AnimatePresence>
+        {editingUser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white p-6 rounded-lg w-full max-w-md"
             >
-              <td className="py-2 px-4 border-b">{user.id}</td>
-              <td className="py-2 px-4 border-b">{user.name}</td>
-              <td className="py-2 px-4 border-b">{user.email}</td>
-              <td className="py-2 px-4 border-b">{user.role}</td>
-              <td className="py-2 px-4 border-b">{user.city}</td>
-              <td className="py-2 px-4 border-b">{user.circle}</td>
-              <td className="py-2 px-4 border-b">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-zait">تعديل المستخدم</h2>
                 <button
-                  onClick={() => handleEdit(user)}
-                  className="bg-yellow-500 text-white p-2 rounded-lg flex items-center"
+                  onClick={handleCloseModal}
+                  className="text-gray-500 hover:text-red-800"
                 >
-                  <FaEdit className="mr-2" />
-                  تعديل
+                  <FaTimes />
                 </button>
-              </td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </motion.table>
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-medium">المدينة</label>
+                <input
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-zait"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-medium">الدائرة</label>
+                <input
+                  type="text"
+                  value={circle}
+                  onChange={(e) => setCircle(e.target.value)}
+                  className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-zait"
+                />
+              </div>
+              <div className="flex justify-end">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleSave}
+                  className="bg-zait hover:bg-zait text-white p-2 rounded-lg mr-2 transition duration-300"
+                >
+                  حفظ
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleCloseModal}
+                  className="bg-gray-500 hover:bg-gray-600 text-white p-2 rounded-lg transition duration-300"
+                >
+                  إلغاء
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {editingUser && (
-        <div className="edit-modal fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-1/3">
-            <h2 className="text-xl font-semibold mb-4">تعديل المستخدم</h2>
-            <div className="mb-4">
-              <label className="block mb-1">المدينة</label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="border p-2 w-full rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1">المنطقة</label>
-              <input
-                type="text"
-                value={circle}
-                onChange={(e) => setCircle(e.target.value)}
-                className="border p-2 w-full rounded"
-              />
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={handleSave}
-                className="bg-blue-500 text-white p-2 rounded-lg mr-2"
-              >
-                حفظ
-              </button>
-              <button
-                onClick={() => setEditingUser(null)}
-                className="bg-gray-500 text-white p-2 rounded-lg"
-              >
-                إلغاء
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="pagination flex justify-between items-center mt-4">
-        <button
+      <div className="pagination flex justify-between items-center mt-6">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
-          className="bg-gray-300 p-2 rounded-lg text-gray-700"
+          className="bg-gray-300 hover:bg-gray-400 p-2 rounded-lg text-gray-700 transition duration-300 disabled:opacity-50"
         >
           السابق
-        </button>
+        </motion.button>
         <span className="text-gray-700">
           صفحة {page} من {Math.ceil(total / pageSize)}
         </span>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() =>
-            setPage((prev) => (total > prev * pageSize ? prev + 1 : prev))
+            setPage((prev) => (prev * pageSize < total ? prev + 1 : prev))
           }
           disabled={page * pageSize >= total}
-          className="bg-gray-300 p-2 rounded-lg text-gray-700"
+          className="bg-gray-300 hover:bg-gray-400 p-2 rounded-lg text-gray-700 transition duration-300 disabled:opacity-50"
         >
           التالي
-        </button>
+        </motion.button>
       </div>
     </div>
   );

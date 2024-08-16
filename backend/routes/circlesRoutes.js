@@ -1,9 +1,10 @@
 
 const express = require('express');
 const router = express.Router();
-const { getCirclesListsCandidates } = require('../controllers/circlesController');
+const { getCirclesListsCandidates,addListWithCandidates } = require('../controllers/circlesController');
 
 // Route to get circles, lists, and candidates
 router.get('/circles-lists-candidates', getCirclesListsCandidates);
+router.post('/circles/add-list', addListWithCandidates);
 
 module.exports = router;
