@@ -59,6 +59,7 @@ const Sidebar = () => {
     { to: "/AdminDashboard/ElectionsCircle", icon: faChartBar, label: "الدوائر الانتخابية" },
     { to: "/AdminDashboard/Request", icon: faListAlt, label: " طلبات القوائم" },
     { to: "/AdminDashboard/Revenu", icon: faDollarSign, label: "الأرباح" },
+    { to: "/AdminDashboard/Ads", icon: faDollarSign, label: "ads" },
     { to: "/AdminDashboard/UserManagement", icon: faCog, label: "الإعدادات" },
   ];
 

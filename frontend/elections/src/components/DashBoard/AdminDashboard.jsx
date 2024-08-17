@@ -10,6 +10,7 @@ import AdminPage from './AdminPage';
 import ElectionsCircle from './ElectionsCircle';
 import Revenu from './Revenu';
 import Request from './Request';
+import Ads from './Ads';
 
 
 function AdminDashboard() {
@@ -25,6 +26,7 @@ function AdminDashboard() {
           <Route path="ElectionsCircle" element={<ElectionsCircle />} /> 
           <Route path="/Revenu" element={<Revenu />} /> 
           <Route path="/Request" element={<Request />} /> 
+          <Route path="/Ads" element={<Ads />} /> 
         </Routes>
       </div>
     </div>

@@ -188,11 +188,13 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const adminRoutes = require('./routes/adminsRoutes.js');
 const listRoutes = require('./routes/listRoutes');
 const candidateRoutes = require('./routes/candidateRoutes');
-const statsRoutes = require('./routes/statsRoutes');
+const statsRoutes = require('./routes/statsRoutes.js');
 const circleRoutes = require('./routes/circlesRoutes');
 const loginRoutes = require('./routes/loginRoutes.js');
 const userRoutes = require('./routes/userRoutes');
 const requestRoutes = require('./routes/requestRoutes');
+const adsRoutes = require('./routes/ads');
+
 
 // Initialize app and database
 const app = express();
@@ -277,7 +279,7 @@ app.use('/api/circles', circleRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/requests', requestRoutes);
-
+app.use('/api/ads', adsRoutes);
 // Fetch Revenue Data
 app.get('/api/revenue', async (req, res) => {
   try {

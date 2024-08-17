@@ -1,5 +1,4 @@
 
-
 exports.up = function(knex) {
   return knex.schema
     .createTable('electoral_districts', table => {
@@ -22,7 +21,7 @@ exports.up = function(knex) {
     .then(() => {
       return knex.schema.createTable('users', table => {
         table.increments('id').primary(); 
-        table.integer('national_id').notNullable().unique(); // National ID as unique field (INTEGER)
+        table.string('national_id').notNullable().unique(); // National ID as unique field (INTEGER)
         table.string('email').notNullable().unique(); // Email field, must be unique
         table.string('name').notNullable(); // Name field
         table.string('city').notNullable(); // City field
@@ -82,7 +81,7 @@ exports.up = function(knex) {
         table.increments('id').primary(); // Primary key for local_list_candidate table
 
         // Foreign key referencing users table
-        table.integer('candidate_national_id').notNullable();
+        table.string('candidate_national_id').notNullable();
         table.foreign('candidate_national_id').references('national_id').inTable('users').onDelete('CASCADE');
 
         // Foreign key referencing city from the users table
@@ -111,7 +110,7 @@ exports.up = function(knex) {
         table.enu('type', ['مسلم', 'كوتا', 'مسيحي', 'شيشاني']); // نوع الترشيح
         table.boolean('isActivate').defaultTo(true);//areej
         // Add foreign key column and reference to the users table
-        table.integer('candidate_national_id').notNullable();
+        table.string('candidate_national_id').notNullable();
         table.foreign('candidate_national_id').references('national_id').inTable('users').onDelete('CASCADE');
 
         table.timestamps(true, true);
@@ -141,7 +140,7 @@ exports.up = function(knex) {
     .then(() => {
       return knex.schema.createTable('party_election_requests', function(table) {
         table.increments('id').primary();
-        table.integer('national_id', 10).notNullable();
+        table.string('national_id', 10).notNullable();
         table.foreign('national_id').references('users.national_id');
         table.string('party_list_name').notNullable();
         table.boolean('is_deleted').defaultTo(false);
@@ -152,7 +151,7 @@ exports.up = function(knex) {
 .then(() => {
   return knex.schema.createTable('local_election_requests', table => {
     table.increments('id').primary();
-    table.integer('national_id').notNullable(); // Change to integer
+    table.string('national_id').notNullable(); // Change to integer
     table.foreign('national_id').references('users.national_id');
     table.string('local_list_name').notNullable();
     table.json('members').notNullable();
@@ -166,7 +165,7 @@ exports.up = function(knex) {
   return knex.schema.createTable('contact_request', table => {
     table.increments('id').primary();
     table.string('contact_name', 20);
-    table.integer('contact_national_id').unsigned().notNullable().references('national_id').inTable('users').onDelete('CASCADE');
+    table.string('contact_national_id').unsigned().notNullable().references('national_id').inTable('users').onDelete('CASCADE');
     table.string('phone', 20);
     table.string('subject', 200);
     table.text('message');
@@ -178,7 +177,7 @@ exports.up = function(knex) {
     .then(() => {
       return knex.schema.createTable('votes', table => {
         table.increments('id').primary();
-        table.integer('voter_id').notNullable();
+        table.string('voter_id').notNullable();
         table.foreign('voter_id').references('national_id').inTable('users').onDelete('CASCADE');
         table.integer('election_id').unsigned().notNullable();
         table.foreign('election_id').references('id').inTable('elections').onDelete('CASCADE');
@@ -200,7 +199,7 @@ exports.up = function(knex) {
         table.decimal('price', 10, 2).notNullable();
         table.date('start_date').notNullable();
         table.date('end_date').notNullable();
-        table.enu('status', ['pending', 'approved', 'rejected', 'active', 'completed']).defaultTo('pending');
+        table.enu('status', [ 'approved', 'rejected']).defaultTo('rejected');
         table.timestamps(true, true);
       });
     });
