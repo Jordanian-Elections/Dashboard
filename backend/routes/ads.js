@@ -1,12 +1,13 @@
-// routes/ads.js
+
+
 const express = require('express');
 const router = express.Router();
-const { getAds, updateAdStatus } = require('../controllers/adsController');
+const adsController = require('../controllers/adsController');
 
-// Route to get all ads
-router.get('/', getAds);
+// Get all ads
+router.get('/', adsController.getAds);
 
-// Route to update ad status
-router.put('/:id/status', updateAdStatus);
+// Update ad status
+router.put('/:id/status', adsController.updateAdStatus);
 
 module.exports = router;

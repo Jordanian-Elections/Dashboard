@@ -11,6 +11,10 @@ import ElectionsCircle from './ElectionsCircle';
 import Revenu from './Revenu';
 import Request from './Request';
 import Ads from './Ads';
+import Chats from './Chats';
+import Messages from './Messages';
+import Result from './Result';
+import Debate from './Debate';
 
 
 function AdminDashboard() {
@@ -27,6 +31,10 @@ function AdminDashboard() {
           <Route path="/Revenu" element={<Revenu />} /> 
           <Route path="/Request" element={<Request />} /> 
           <Route path="/Ads" element={<Ads />} /> 
+          <Route path="/Chats" element={<Chats />} /> 
+          <Route path="/Messages" element={<Messages />} /> 
+          <Route path="/Result" element={<Result />} /> 
+          <Route path="/Debate" element={<Debate />} /> 
         </Routes>
       </div>
     </div>

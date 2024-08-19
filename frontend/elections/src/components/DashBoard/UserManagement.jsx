@@ -1,19 +1,24 @@
 
 
-
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSearch, FaFilter, FaEdit, FaTimes } from 'react-icons/fa';
+import { 
+  FaSearch as IconSearch, 
+  FaFilter as IconFilter, 
+  FaEdit as IconEdit, 
+  FaTimes as IconClose, 
+  FaChevronLeft as IconChevronLeft, 
+  FaChevronRight as IconChevronRight 
+} from 'react-icons/fa';
 import { debounce } from 'lodash';
-// import debounce from 'lodash.debounce';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('');
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(7);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -114,7 +119,7 @@ const UserManagementPage = () => {
             className="border-none p-3 rounded-l-lg focus:outline-none w-full"
             aria-label="البحث بالاسم"
           />
-          <FaSearch className="text-gray-500 p-3" />
+          <IconSearch className=" ml-2 text-gray-400 text-xl" />
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
@@ -126,12 +131,11 @@ const UserManagementPage = () => {
             className="border-none p-3 rounded-l-lg focus:outline-none w-full appearance-none"
             aria-label="تصفية حسب الدور"
           >
-            <option value="" className=''>كل الأدوار</option>
+            <option value="">كل الأدوار</option>
             <option value="voter">ناخب</option>
             <option value="candidate">مرشح</option>
-            {/* <option value="admin">مدير</option> */}
           </select>
-          <FaFilter className="text-gray-500 p-3" />
+          <IconFilter className="text-gray-400 ml-2 text-xl" />
         </motion.div>
       </div>
 
@@ -153,15 +157,14 @@ const UserManagementPage = () => {
               <th className="py-3 pl-20 text-left text-zait">إجراءات</th>
             </tr>
           </thead>
-          <tbody className=''>
+          <tbody>
             {users.map((user, index) => (
               <motion.tr
                 key={user.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: index * 0.05 }}
-                // whileHover={{ backgroundColor: '#f3f4f6' }}
-                className="border-b border-gray-200 last:border-b-0 even:bg-gray-200 "
+                className="border-b border-gray-200 last:border-b-0 even:bg-gray-200"
               >
                 <td className="py-3 px-4">{user.id}</td>
                 <td className="py-3 px-4">{user.name}</td>
@@ -176,7 +179,7 @@ const UserManagementPage = () => {
                     onClick={() => handleEdit(user)}
                     className="bg-zait hover:bg-gray-600 text-white p-2 rounded-lg flex items-center transition duration-300"
                   >
-                    <FaEdit className="mr-2" />
+                    <IconEdit className="mr-2" />
                     تعديل
                   </motion.button>
                 </td>
@@ -189,24 +192,21 @@ const UserManagementPage = () => {
       <AnimatePresence>
         {editingUser && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
           >
             <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="bg-white p-6 rounded-lg w-full max-w-md"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3"
             >
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-zait">تعديل المستخدم</h2>
-                <button
-                  onClick={handleCloseModal}
-                  className="text-gray-500 hover:text-red-800"
-                >
-                  <FaTimes />
+                <h2 className="text-xl font-semibold">تعديل المستخدم</h2>
+                <button onClick={handleCloseModal} aria-label="إغلاق">
+                  <IconClose />
                 </button>
               </div>
               <div className="mb-4">
@@ -228,52 +228,36 @@ const UserManagementPage = () => {
                 />
               </div>
               <div className="flex justify-end">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={handleSave}
-                  className="bg-zait hover:bg-zait text-white p-2 rounded-lg mr-2 transition duration-300"
+                  className="bg-zait text-white p-2 rounded-lg hover:bg-gray-600 transition duration-300"
                 >
-                  حفظ
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleCloseModal}
-                  className="bg-gray-500 hover:bg-gray-600 text-white p-2 rounded-lg transition duration-300"
-                >
-                  إلغاء
-                </motion.button>
+                  حفظ التعديلات
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="pagination flex justify-between items-center mt-6">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+      <div className="pagination mt-6 flex items-center justify-between">
+        <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          className="bg-zait text-white p-2 rounded-lg flex items-center transition duration-300"
           disabled={page === 1}
-          className="bg-gray-300 hover:bg-gray-400 p-2 rounded-lg text-gray-700 transition duration-300 disabled:opacity-50"
         >
-          السابق
-        </motion.button>
+          <IconChevronRight />
+        </button>
         <span className="text-gray-700">
           صفحة {page} من {Math.ceil(total / pageSize)}
         </span>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() =>
-            setPage((prev) => (prev * pageSize < total ? prev + 1 : prev))
-          }
+        <button
+          onClick={() => setPage((prev) => prev + 1)}
+          className="bg-zait text-white p-2 rounded-lg flex items-center transition duration-300"
           disabled={page * pageSize >= total}
-          className="bg-gray-300 hover:bg-gray-400 p-2 rounded-lg text-gray-700 transition duration-300 disabled:opacity-50"
         >
-          التالي
-        </motion.button>
+          <IconChevronLeft />
+        </button>
       </div>
     </div>
   );

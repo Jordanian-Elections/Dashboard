@@ -1,89 +1,159 @@
-// src/components/Ads.js
-import React, { useState, useEffect } from 'react';
+
+
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import { PlusCircle, Edit2, Trash2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-const Ads = () => {
+const AdList = () => {
   const [ads, setAds] = useState([]);
-  const [status, setStatus] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [updateLoading, setUpdateLoading] = useState({});
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchAds();
-  }, []);
-
-  const fetchAds = async () => {
+  const fetchAds = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:3001/api/ads');
       setAds(response.data);
     } catch (error) {
       console.error('Error fetching ads:', error);
+      setError('حدث خطأ أثناء جلب الإعلانات. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const handleStatusChange = async (id) => {
+  useEffect(() => {
+    fetchAds();
+  }, [fetchAds]);
+
+  const updateAdStatus = async (id, status) => {
+    setUpdateLoading(prev => ({ ...prev, [id]: true }));
     try {
-      const response = await axios.put(`/api/ads/${id}/status`, { status: status[id] });
-      if (response.status === 200) {
-        fetchAds(); // Refresh the list after updating the status
-      }
+      await axios.put(`http://localhost:3001/api/ads/${id}/status`, { status });
+      await fetchAds();
     } catch (error) {
       console.error('Error updating ad status:', error);
+      setError('حدث خطأ أثناء تحديث حالة الإعلان. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setUpdateLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
-  const handleSelectChange = (id, newStatus) => {
-    setStatus({ ...status, [id]: newStatus });
-  };
+  const ActionButton = ({ onClick, bgColor, hoverColor, icon, text }) => (
+    <button
+      onClick={onClick}
+      className={`${bgColor} text-white px-3 py-1 my-2 rounded mr-2 hover:${hoverColor} transition-colors duration-300 flex items-center text-l w-20`}
+    >
+      <FontAwesomeIcon icon={icon} className="mr-2" />
+      {text}
+    </button>
+  );
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Ads Dashboard</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="py-3 px-6 text-left">ID</th>
-              <th className="py-3 px-6 text-left">Candidate</th>
-              <th className="py-3 px-6 text-left">Content</th>
-              <th className="py-3 px-6 text-left">Price</th>
-              <th className="py-3 px-6 text-left">Status</th>
-              <th className="py-3 px-6 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ads.map(ad => (
-              <tr key={ad.id} className="border-b border-gray-200">
-                <td className="py-3 px-6">{ad.id}</td>
-                <td className="py-3 px-6">{ad.candidate_name}</td>
-                <td className="py-3 px-6">{ad.content}</td>
-                <td className="py-3 px-6">${ad.price}</td>
-                <td className="py-3 px-6">
-                  <select
-                    className="block w-full bg-gray-50 border border-gray-300 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    value={status[ad.id] || ad.status}
-                    onChange={(e) => handleSelectChange(ad.id, e.target.value)}
+    <div className="bg-gray-50 min-h-screen p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        <motion.h1 
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl font-bold mb-8 text-zait text-center"
+        >
+          قائمة الإعلانات
+        </motion.h1>
+
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="bg-red-100 text-red-800 border border-red-300 rounded-lg p-4 mb-4">
+                <div className="flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  <span>{error}</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-blue-500" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto shadow-md sm:rounded-lg">
+            <table className="w-full text-sm text-right text-gray-500 bg-white rounded-lg overflow-hidden">
+              <thead className="text-xl text-zait uppercase bg-gray-400">
+                <tr>
+                  {['الرقم', 'الوصف', 'السعر', 'صورة الإعلان', 'الحالة', 'اسم المرشح', 'الإجراءات'].map((header) => (
+                    <th key={header} className="px-6 py-3">{header}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {ads.map(ad => (
+                  <motion.tr 
+                    key={ad.id}
+                    className="bg-white border-b  transition-colors duration-300 even:bg-gray-200"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="active">Active</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                </td>
-                <td className="py-3 px-6">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => handleStatusChange(ad.id)}
-                  >
-                    Update Status
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{ad.id}</td>
+                    <td className="px-6 py-4">{ad.description}</td>
+                    <td className="px-6 py-4">{ad.price}دينار أردني</td>
+                    <td className="px-6 py-4">
+                      <img src={ad.image_url} alt="Ad" className="w-32 h-32 object-cover rounded-lg shadow-md" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded text-l font-semibold
+                      ${
+                        ad.status === 'approved' ? 'bg-green-200 text-green-800' :
+                        ad.status === 'rejected' ? 'bg-red-200 text-red-800' :
+                        'bg-yellow-200 text-yellow-800'
+                      }`}>
+                        {ad.status === 'approved' ? 'تمت الموافقة' :
+                         ad.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">{ad.candidate_name}</td>
+                    <td className="px-6 py-4">
+                      {updateLoading[ad.id] ? (
+                        <FontAwesomeIcon icon={faSpinner} spin className="text-blue-500" />
+                      ) : (
+                        <>
+                          <ActionButton
+                            onClick={() => updateAdStatus(ad.id, 'approved')}
+                            bgColor="bg-green-500"
+                            hoverColor="bg-green-600"
+                            icon={faCheck}
+                            text="موافقة"
+                          />
+                          <ActionButton
+                            onClick={() => updateAdStatus(ad.id, 'rejected')}
+                            bgColor="bg-red-500"
+                            hoverColor="bg-red-600"
+                            icon={faTimes}
+                            text="رفض"
+                          />
+                        </>
+                      )}
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default Ads;
+export default AdList;
