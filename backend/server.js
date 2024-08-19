@@ -14,16 +14,17 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const adminRoutes = require('./routes/adminsRoutes.js');
 const listRoutes = require('./routes/listRoutes');
 const candidateRoutes = require('./routes/candidateRoutes');
-const statsRoutes = require('./routes/statsRoutes.js');
+// const statsRoutes = require('./routes/statsRoutes.js');
 const circleRoutes = require('./routes/circlesRoutes');
 const loginRoutes = require('./routes/loginRoutes.js');
 const userRoutes = require('./routes/userRoutes');
 const requestRoutes = require('./routes/requestRoutes');
 const adsRoutes = require('./routes/ads');
 const contactRequestsRouter = require('./routes/contactRequests');
-const electionRoutes = require('./routes/electionRoutes.js');
+// const electionRoutes = require('./routes/electionRoutes.js');
 const debateRoutes = require('./routes/debateRoutes.js');
-
+const paymentRoutes = require('./routes/paymentRoutes'); // Import your payment routes
+const electionRoutes = require('./routes/statsRoutes.js');
 
 
 // Initialize app and database
@@ -106,13 +107,16 @@ app.use('/api', userRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/circles', circleRoutes);
-app.use('/api/stats', statsRoutes);
+// app.use('/api/stats', statsRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/ads', adsRoutes);
 app.use('/api/contact-requests', contactRequestsRouter);
-app.use('/api/time', electionRoutes);
+// app.use('/api/time', electionRoutes);
 app.use('/api/debate', debateRoutes);
+app.use('/payments', paymentRoutes);
+app.use('/api/over', electionRoutes);
+
 
 
 
@@ -127,36 +131,6 @@ app.get('/api/revenue', async (req, res) => {
   } catch (error) {
     console.error('Error fetching revenue data:', error);
     res.status(500).json({ error: 'An error occurred while fetching revenue data' });
-  }
-});
-
-// Create Payment Intent
-app.post('/create-payment-intent', async (req, res) => {
-  const { amount, currency } = req.body;
-
-  if (!amount || isNaN(amount) || amount <= 0) {
-    return res.status(400).json({ error: 'Invalid amount' });
-  }
-
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency,
-    });
-
-    await db('payments').insert({
-      stripe_payment_id: paymentIntent.id,
-      amount,
-      currency,
-      status: paymentIntent.status,
-    });
-
-    res.json({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    console.error('Error creating payment intent:', error.message);
-    res.status(500).json({ error: error.message });
   }
 });
 

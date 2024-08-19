@@ -50,9 +50,13 @@ export default {
     function ({ addUtilities }) {
       addUtilities({
         '.ltr': {
-          direction: 'ltr',
-          textAlign: 'left',
-        },
+    direction: 'ltr',
+    textAlign: 'left',
+  },
+  '.rtl': {
+    direction: 'rtl',
+    textAlign: 'right',
+  },
       }, ['responsive', 'hover']);
     }
   ],
