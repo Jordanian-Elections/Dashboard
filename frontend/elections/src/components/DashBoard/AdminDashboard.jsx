@@ -15,6 +15,7 @@ import Chats from './Chats';
 import Messages from './Messages';
 import Result from './Result';
 import Debate from './Debate';
+import Debate_screen from '../../Debate/Debate_screen';
 
 
 function AdminDashboard() {
@@ -35,6 +36,7 @@ function AdminDashboard() {
           <Route path="/Messages" element={<Messages />} /> 
           <Route path="/Result" element={<Result />} /> 
           <Route path="/Debate" element={<Debate />} /> 
+          <Route path='/Debate-screen' element={<Debate_screen/>}/>
         </Routes>
       </div>
     </div>

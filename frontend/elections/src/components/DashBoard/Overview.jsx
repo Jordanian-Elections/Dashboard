@@ -20,6 +20,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import axios from "axios";
+import Countdown from "./Countdown";
 
 const Home = () => {
   const [stats, setStats] = useState({
@@ -194,6 +195,12 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-4 md:p-8" dir="rtl">
+      {upcomingElection && (
+        <Countdown
+          startDate={upcomingElection.start_date}
+          endDate={upcomingElection.end_date}
+        />
+      )}
       <motion.h1 
         className="text-4xl md:text-5xl font-bold mb-8 md:mb-12 text-zait text-center"
         initial={{ opacity: 0, y: -20 }}
@@ -218,7 +225,7 @@ const Home = () => {
               <span>{countdown}</span>
             </div>
             <div className="text-sm md:text-base mt-4">
-              {electionStatus}
+              {stats.electionStatus}
             </div>
           </motion.div>
         )}
@@ -234,7 +241,9 @@ const Home = () => {
           <div className="text-sm text-gray-600">{stats.partyVotedPercentage}%</div>
         </StatCard>
         <StatCard title="حالة الانتخاب   " icon={Calendar}>
-          <div className="text-2xl font-bold">{stats.electionStatus}</div>
+          {/* <div className="text-2xl font-bold">{stats.electionStatus}</div> */}
+          <div className="text-2xl font-bold">{electionStatus || "لا توجد بيانات"}</div>
+
         </StatCard>
       </div>
 
@@ -247,7 +256,7 @@ const Home = () => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="participation" fill="#4CAF50" />
+            <Bar dataKey="participation" fill="#3F7A5E" />
           </BarChart>
         </ResponsiveContainer>
       </div>

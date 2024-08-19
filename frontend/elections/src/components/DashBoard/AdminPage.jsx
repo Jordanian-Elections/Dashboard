@@ -128,8 +128,8 @@ const AdminPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white rounded-lg shadow-lg p-6 mb-8"
           >
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">إضافة مدير جديد</h2>
-            <div className="flex flex-col md:flex-row gap-4">
+            <h2 className="text-2xl font-semibold mb-4 text-zait">إضافة مدير جديد</h2>
+            <div className="flex flex-col md:flex-row gap-4 ">
               <input
                 type="text"
                 placeholder="الاسم"
@@ -170,11 +170,11 @@ const AdminPage = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="bg-white rounded-lg shadow-lg overflow-hidden"
         >
-          <h2 className="text-2xl font-semibold p-6 border-b text-gray-700">قائمة المديرين</h2>
+          <h2 className="text-2xl font-semibold p-6 border-b text-zait ">قائمة المديرين</h2>
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 text-zait">
-                <tr>
+            <table className="w-full bg-gray-400 ">
+              <thead className="bg-gray-50 text-zait bg-gray-400">
+                <tr className='bg-gray-400'>
                   <th className="py-3 px-4 text-right">الرقم</th>
                   <th className="py-3 px-4 text-right">الاسم</th>
                   <th className="py-3 px-4 text-right">البريد الإلكتروني</th>
@@ -186,7 +186,7 @@ const AdminPage = () => {
                 {users.map(user => (
                   <motion.tr 
                     key={user.id} 
-                    className={`${user.is_active ? 'bg-white' : 'bg-gray-100'}  transition duration-300 odd:bg-gray-200`}
+                    className={`${user.is_active ? 'bg-white' : 'bg-gray-100'}  transition duration-300 even:bg-gray-200`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}

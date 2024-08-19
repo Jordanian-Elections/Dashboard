@@ -10,6 +10,8 @@ import ContactUS from "./components/ContactUs/ContactUS";
 import AdminDashboard from "./components/DashBoard/AdminDashboard";
 import PaymentComponent from "./components/PaymentComponent";
 import LoginPage from "./components/LoginPage";
+// import Debate_screen from "./Debate/Debate_screen";
+import Debate_Room from "./Debate/Debate_Room";
 const App = () => {
   return (
     <Router>
@@ -22,6 +24,10 @@ const App = () => {
         <Route path="/AdminDashboard/*" element={<AdminDashboard />} />
         <Route path="/PaymentComponent" element={<PaymentComponent />} />
         <Route path="/" element={<LoginPage />} />
+        {/* <Route path="/AdminDashboard/Debate-screen" element={<Debate_screen />} /> */}
+        <Route path="/Debate-Room/:roomId" element={<Debate_Room />}/>
+        {/* <Route path="/Debate-screen" element={<PrivateRoute element={<Debate_screen />} />} />
+        <Route path="/Debate-Room/:roomId" element={<PrivateRoute element={<Debate_Room />} />} /> */}
       
       </Routes>
     </Router>
