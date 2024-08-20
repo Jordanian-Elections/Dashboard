@@ -17,6 +17,7 @@ const AdList = () => {
     try {
       const response = await axios.get('http://localhost:3001/api/ads');
       setAds(response.data);
+      
     } catch (error) {
       console.error('Error fetching ads:', error);
       setError('حدث خطأ أثناء جلب الإعلانات. يرجى المحاولة مرة أخرى.');
@@ -24,6 +25,7 @@ const AdList = () => {
       setLoading(false);
     }
   }, []);
+  
 
   useEffect(() => {
     fetchAds();
@@ -34,6 +36,7 @@ const AdList = () => {
     try {
       await axios.put(`http://localhost:3001/api/ads/${id}/status`, { status });
       await fetchAds();
+      
     } catch (error) {
       console.error('Error updating ad status:', error);
       setError('حدث خطأ أثناء تحديث حالة الإعلان. يرجى المحاولة مرة أخرى.');
