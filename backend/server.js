@@ -105,8 +105,8 @@ app.put('/admins/:id', authenticateToken, async (req, res) => {
 app.use('/api/admin', adminRoutes);
 app.use('/api', userRoutes); 
 app.use('/api/lists', listRoutes);
-app.use('/api/candidates', candidateRoutes);
-app.use('/api/circles', circleRoutes);
+app.use('/api', candidateRoutes);
+app.use('/api', circleRoutes);
 // app.use('/api/stats', statsRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/requests', requestRoutes);

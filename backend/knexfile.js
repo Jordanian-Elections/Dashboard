@@ -6,7 +6,7 @@ module.exports = {
       host: 'localhost',
       user: 'postgres',
       password: '12345',
-      database: 'Election'
+      database: 'test1'
     }
   },
   production: {
@@ -15,7 +15,7 @@ module.exports = {
       host: 'localhost',
       user: 'postgres',
       password: '12345',
-      database: 'Election'
+      database: 'test1'
     }
   },
   migrations: {

@@ -1,4 +1,29 @@
 
+// const express = require('express');
+// const router = express.Router();
+// const userController = require('../controllers/usersController');
+
+// // Get all users with pagination and filtering
+// router.get('/users', userController.getAllUsers);
+
+// // Add a new user
+// router.post('/users', userController.addUser);
+
+// // Update a user
+// router.put('/users/:id', userController.updateUser);
+
+// // Soft delete (deactivate) a user
+// router.delete('/users/:id', userController.softDeleteUser);
+
+// // Activate a user
+// router.post('/users/:id/activate', userController.activateUser);
+
+// // Deactivate a user (same as soft delete)
+// router.post('/users/:id/deactivate', userController.deactivateUser);
+
+// module.exports = router;
+
+
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/usersController');
@@ -10,15 +35,15 @@ router.get('/users', userController.getAllUsers);
 router.post('/users', userController.addUser);
 
 // Update a user
-router.put('/users/:id', userController.updateUser);
+router.put('/users/:national_id', userController.updateUser);
 
 // Soft delete (deactivate) a user
-router.delete('/users/:id', userController.softDeleteUser);
+router.patch('/users/:national_id/deactivate', userController.softDeleteUser);
 
 // Activate a user
-router.post('/users/:id/activate', userController.activateUser);
+router.patch('/users/:national_id/activate', userController.activateUser);
 
 // Deactivate a user (same as soft delete)
-router.post('/users/:id/deactivate', userController.deactivateUser);
+router.patch('/users/:national_id/deactivate', userController.deactivateUser);
 
 module.exports = router;

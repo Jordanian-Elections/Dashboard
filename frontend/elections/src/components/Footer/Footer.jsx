@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo.png"; // Replace with your logo path
+import logo from "../../assets/logoo1.png"; // Replace with your logo path
 import {
   FaFacebook,
   FaInstagram,
@@ -37,10 +37,10 @@ export const Footer = () => {
             <h1 className="sm:text-3xl text-xl font-bold mb-3 flex items-center gap-3">
               <img
                 src={logo}
-                alt="VoteJO Logo"
-                className="h-16 w-16 rounded-full"
+                alt="Logo"
+                className="w-20"
               />
-              <span>VoteJO</span>
+              {/* <span>VoteJO</span> */}
             </h1>
             <p>
               في VoteJO، نؤمن بتقديم أفضل تجربة انتخابية للمواطنين الأردنيين.

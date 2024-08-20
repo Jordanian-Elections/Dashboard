@@ -65,7 +65,7 @@ const Countdown = () => {
     // Fetch upcoming election data
     const fetchUpcomingElection = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/over/upcoming-election');
+        const response = await fetch('http://localhost:3001/api/over/upcoming-election');
         const data = await response.json();
         
         if (response.ok) {

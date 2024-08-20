@@ -1,169 +1,320 @@
 
-// const knex = require('knex')(require('../knexfile').development);
 
-// async function getCirclesListsCandidates(req, res) {
+// // const knex = require('knex')(require('../knexfile').development);
+
+// // async function getCirclesListsCandidates(req, res) {
+// //   try {
+// //     const result = await knex('local_lists')
+// //       .select('circle')
+// //       .distinct()
+// //       .orderBy('circle');
+
+// //     const circlesWithLists = [];
+
+// //     for (const circle of result) {
+// //       const circleName = circle.circle;
+
+// //       const lists = await knex('local_lists')
+// //         .select('list')
+// //         .where('circle', circleName)
+// //         .distinct()
+// //         .orderBy('list');
+
+// //       const listsWithCandidates = [];
+
+// //       for (const list of lists) {
+// //         const listName = list.list;
+
+// //         const candidates = await knex('candidates')
+// //           .select('name', 'isActivate') // Ensure you select 'isActivate'
+// //           .where('circle', circleName)
+// //           .andWhere('list', listName)
+// //           .orderBy('name');
+
+// //         listsWithCandidates.push({
+// //           list: listName,
+// //           candidates
+// //         });
+// //       }
+
+// //       circlesWithLists.push({
+// //         circle: circleName,
+// //         lists: listsWithCandidates
+// //       });
+// //     }
+
+// //     res.json(circlesWithLists);
+// //   } catch (error) {
+// //     console.error('Error fetching circles, lists, and candidates:', error);
+// //     res.status(500).json({ error: 'An error occurred while fetching data' });
+// //   }
+// // }
+
+// // async function addListWithCandidates(req, res) {
+// //   const { circle, list, candidates } = req.body;
+
+// //   if (!circle || !list || !Array.isArray(candidates)) {
+// //     return res.status(400).json({ error: 'Invalid input data' });
+// //   }
+
+// //   try {
+// //     await knex('local_lists').insert({ circle, list });
+
+// //     for (const candidate of candidates) {
+// //       await knex('candidates').insert({
+// //         circle,
+// //         list,
+// //         name: candidate,
+// //         isActivate: true // Default value for 'isActivate'
+// //       });
+// //     }
+
+// //     res.status(201).json({ message: 'List and candidates added successfully' });
+// //   } catch (error) {
+// //     console.error('Error adding list and candidates:', error);
+// //     res.status(500).json({ error: 'An error occurred while adding data' });
+// //   }
+// // }
+
+// // module.exports = {
+// //   getCirclesListsCandidates,
+// //   addListWithCandidates
+// // };
+
+// // const knex = require('../db');
+
+// // // Get all circles with lists and candidates
+// // exports.getCirclesWithListsAndCandidates = async (req, res) => {
+// //   try {
+// //     const circles = await knex('candidates')
+// //       .select('circle')
+// //       .distinct()
+// //       .orderBy('circle');
+
+// //     const data = [];
+
+// //     for (const circle of circles) {
+// //       const lists = await knex('candidates')
+// //         .select('list')
+// //         .where('circle', circle.circle)
+// //         .distinct()
+// //         .orderBy('list');
+
+// //       const listsWithCandidates = await Promise.all(
+// //         lists.map(async list => {
+// //           const candidates = await knex('candidates')
+// //             .select('name', 'isActivate')
+// //             .where({ circle: circle.circle, list: list.list });
+
+// //           return {
+// //             list: list.list,
+// //             candidates
+// //           };
+// //         })
+// //       );
+
+// //       data.push({
+// //         circle: circle.circle,
+// //         lists: listsWithCandidates
+// //       });
+// //     }
+
+// //     res.json(data);
+// //   } catch (error) {
+// //     console.error('Error fetching circles with lists and candidates:', error);
+// //     res.status(500).json({ error: 'Internal Server Error' });
+// //   }
+// // };
+
+// // // Toggle candidate activation status
+// // exports.toggleCandidateStatus = async (req, res) => {
+// //   const { circle, list, name, isActivate } = req.body;
+
+// //   try {
+// //     const [updatedCandidate] = await knex('candidates')
+// //       .where({ circle, list, name })
+// //       .update({ isActivate: !isActivate })
+// //       .returning('*');
+
+// //     if (updatedCandidate) {
+// //       res.json(updatedCandidate);
+// //     } else {
+// //       res.status(404).json({ error: 'Candidate not found' });
+// //     }
+// //   } catch (error) {
+// //     console.error('Error updating candidate status:', error);
+// //     res.status(500).json({ error: 'Internal Server Error' });
+// //   }
+// //   exports.toggleCandidateStatus = async (req, res) => {
+// //     const { circle, list, name, isActivate } = req.body;
+  
+// //     try {
+// //       const [updatedCandidate] = await knex('candidates')
+// //         .where({ circle, list, name })
+// //         .update({ isActivate: !isActivate })
+// //         .returning('*');
+  
+// //       if (updatedCandidate) {
+// //         res.json(updatedCandidate);
+// //       } else {
+// //         res.status(404).json({ error: 'Candidate not found' });
+// //       }
+// //     } catch (error) {
+// //       console.error('Error updating candidate status:', error);
+// //       res.status(500).json({ error: 'Internal Server Error' });
+// //     }
+// //   };
+// // };
+
+
+
+// const knex = require('../db');
+
+// // Get all circles with lists and candidates
+// exports.getCirclesWithListsAndCandidates = async (req, res) => {
 //   try {
-//     const result = await knex('local_lists')
+//     const circles = await knex('candidates')
 //       .select('circle')
 //       .distinct()
-//       .orderBy('circle')
-//       .then(async circles => {
-//         const circlesWithLists = [];
+//       .orderBy('circle');
 
-//         for (const circle of circles) {
-//           const circleName = circle.circle;
+//     const data = [];
 
-//           // Fetch lists for the current circle
-//           const lists = await knex('local_lists')
-//             .select('list')
-//             .where('circle', circleName)
-//             .distinct()
-//             .orderBy('list');
+//     for (const circle of circles) {
+//       const lists = await knex('candidates')
+//         .select('list')
+//         .where('circle', circle.circle)
+//         .distinct()
+//         .orderBy('list');
 
-//           const listsWithCandidates = [];
+//       const listsWithCandidates = await Promise.all(
+//         lists.map(async list => {
+//           const candidates = await knex('candidates')
+//             .select('*') // Return all details for each candidate
+//             .where({ circle: circle.circle, list: list.list });
 
-//           for (const list of lists) {
-//             const listName = list.list;
+//           return {
+//             list: list.list,
+//             candidates
+//           };
+//         })
+//       );
 
-//             // Fetch candidates for the current list
-//             const candidates = await knex('candidates')
-//               .select('name')
-//               .where('circle', circleName)
-//               .andWhere('list', listName)
-//               .orderBy('name');
-
-//             listsWithCandidates.push({
-//               list: listName,
-//               candidates
-//             });
-//           }
-
-//           circlesWithLists.push({
-//             circle: circleName,
-//             lists: listsWithCandidates
-//           });
-//         }
-
-//         return circlesWithLists;
-//       });
-
-//     res.json(result);
-//   } catch (error) {
-//     console.error('Error fetching circles, lists, and candidates:', error);
-//     res.status(500).json({ error: 'An error occurred while fetching data' });
-//   }
-// }
-
-// async function addListWithCandidates(req, res) {
-//   const { circle, list, candidates } = req.body;
-
-//   if (!circle || !list || !Array.isArray(candidates)) {
-//     return res.status(400).json({ error: 'Invalid input data' });
-//   }
-
-//   try {
-//     // Insert the new list into the 'local_lists' table
-//     await knex('local_lists').insert({ circle, list });
-
-//     // Insert each candidate into the 'candidates' table
-//     for (const candidate of candidates) {
-//       await knex('candidates').insert({
-//         circle,
-//         list,
-//         name: candidate,
+//       data.push({
+//         circle: circle.circle,
+//         lists: listsWithCandidates
 //       });
 //     }
 
-//     res.status(201).json({ message: 'List and candidates added successfully' });
+//     res.json(data);
 //   } catch (error) {
-//     console.error('Error adding list and candidates:', error);
-//     res.status(500).json({ error: 'An error occurred while adding data' });
+//     console.error('Error fetching circles with lists and candidates:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
 //   }
-// }
-
-// module.exports = {
-//   getCirclesListsCandidates,
-//   addListWithCandidates // Export the new function
 // };
 
 
-const knex = require('knex')(require('../knexfile').development);
+const knex = require('../db');
 
-async function getCirclesListsCandidates(req, res) {
+// Get all circles with lists and candidates
+exports.getCirclesWithListsAndCandidates = async (req, res) => {
   try {
-    const result = await knex('local_lists')
+    // Fetch all distinct circles
+    const circles = await knex('candidates')
       .select('circle')
       .distinct()
       .orderBy('circle');
 
-    const circlesWithLists = [];
+    const data = [];
 
-    for (const circle of result) {
-      const circleName = circle.circle;
-
-      const lists = await knex('local_lists')
+    // Iterate over each circle to fetch lists and candidates
+    for (const circle of circles) {
+      // Fetch all distinct lists within the current circle
+      const lists = await knex('candidates')
         .select('list')
-        .where('circle', circleName)
+        .where('circle', circle.circle)
         .distinct()
         .orderBy('list');
 
-      const listsWithCandidates = [];
+      // Fetch candidates for each list within the current circle
+      const listsWithCandidates = await Promise.all(
+        lists.map(async list => {
+          const candidates = await knex('candidates')
+            .select('*') // Return all details for each candidate
+            .where({ circle: circle.circle, list: list.list });
 
-      for (const list of lists) {
-        const listName = list.list;
+          return {
+            list: list.list,
+            candidates
+          };
+        })
+      );
 
-        const candidates = await knex('candidates')
-          .select('name', 'isActivate') // Ensure you select 'isActivate'
-          .where('circle', circleName)
-          .andWhere('list', listName)
-          .orderBy('name');
-
-        listsWithCandidates.push({
-          list: listName,
-          candidates
-        });
-      }
-
-      circlesWithLists.push({
-        circle: circleName,
+      data.push({
+        circle: circle.circle,
         lists: listsWithCandidates
       });
     }
 
-    res.json(circlesWithLists);
+    res.json(data);
   } catch (error) {
-    console.error('Error fetching circles, lists, and candidates:', error);
-    res.status(500).json({ error: 'An error occurred while fetching data' });
+    console.error('Error fetching circles with lists and candidates:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
 
-async function addListWithCandidates(req, res) {
-  const { circle, list, candidates } = req.body;
+// Toggle candidate activation status
+// exports.toggleCandidateStatus = async (req, res) => {
+//   const { candidate_national_id } = req.params;
 
-  if (!circle || !list || !Array.isArray(candidates)) {
-    return res.status(400).json({ error: 'Invalid input data' });
-  }
+//   try {
+//     // Retrieve the candidate's current status
+//     const [currentCandidate] = await knex('candidates')
+//       .select('isActivate')
+//       .where({ candidate_national_id });
+
+//     if (!currentCandidate) {
+//       return res.status(404).json({ error: 'Candidate not found' });
+//     }
+
+//     // Toggle the status
+//     const [updatedCandidate] = await knex('candidates')
+//       .where({ candidate_national_id })
+//       .update({ isActivate: !currentCandidate.isActivate })
+//       .returning('*');
+
+//     res.json(updatedCandidate);
+//   } catch (error) {
+//     console.error('Error updating candidate status:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// Toggle candidate activation status
+exports.toggleCandidateStatus = async (req, res) => {
+  const { candidate_national_id } = req.params;
 
   try {
-    await knex('local_lists').insert({ circle, list });
+    // Retrieve the candidate's current status
+    const [currentCandidate] = await knex('candidates')
+      .select('isActivate')
+      .where({ candidate_national_id });
 
-    for (const candidate of candidates) {
-      await knex('candidates').insert({
-        circle,
-        list,
-        name: candidate,
-        isActivate: true // Default value for 'isActivate'
-      });
+    if (!currentCandidate) {
+      return res.status(404).json({ error: 'المرشح غير موجود' });
     }
 
-    res.status(201).json({ message: 'List and candidates added successfully' });
-  } catch (error) {
-    console.error('Error adding list and candidates:', error);
-    res.status(500).json({ error: 'An error occurred while adding data' });
-  }
-}
+    // Toggle the status
+    const [updatedCandidate] = await knex('candidates')
+      .where({ candidate_national_id })
+      .update({ isActivate: !currentCandidate.isActivate })
+      .returning('*');
 
-module.exports = {
-  getCirclesListsCandidates,
-  addListWithCandidates
+    if (!updatedCandidate) {
+      return res.status(500).json({ error: 'فشل في تحديث حالة المرشح' });
+    }
+
+    res.json(updatedCandidate);
+  } catch (error) {
+    console.error('Error updating candidate status:', error);
+    res.status(500).json({ error: 'فشل في تحديث حالة المرشح. يرجى المحاولة لاحقًا.' });
+  }
 };

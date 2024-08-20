@@ -43,8 +43,8 @@ const AdminPage = () => {
       setNewUser({ name: '', email: '', password: '' });
       setError('');
     } catch (error) {
-      console.error('خطأ في إضافة المدير:', error);
-      setError('حدث خطأ أثناء إضافة المدير. يرجى المحاولة مرة أخرى.');
+      console.error('خطأ في إضافة المشرف:', error);
+      setError('حدث خطأ أثناء إضافة المشرف. يرجى المحاولة مرة أخرى.');
     }
   };
 
@@ -60,8 +60,8 @@ const AdminPage = () => {
       setEditingUserId(null);
       setError('');
     } catch (error) {
-      console.error('خطأ في تحديث المدير:', error);
-      setError('حدث خطأ أثناء تحديث المدير. يرجى المحاولة مرة أخرى.');
+      console.error('خطأ في تحديث المشرف:', error);
+      setError('حدث خطأ أثناء تحديث المشرف. يرجى المحاولة مرة أخرى.');
     }
   };
 
@@ -71,8 +71,8 @@ const AdminPage = () => {
       setUsers(users.map(user => (user.id === id ? { ...user, is_active: false } : user)));
       setError('');
     } catch (error) {
-      console.error('خطأ في تعطيل المدير:', error);
-      setError('حدث خطأ أثناء تعطيل المدير. يرجى المحاولة مرة أخرى.');
+      console.error('خطأ في تعطيل المشرف:', error);
+      setError('حدث خطأ أثناء تعطيل المشرف. يرجى المحاولة مرة أخرى.');
     }
   };
 
@@ -82,8 +82,8 @@ const AdminPage = () => {
       setUsers(users.map(user => (user.id === id ? { ...user, is_active: true } : user)));
       setError('');
     } catch (error) {
-      console.error('خطأ في تفعيل المدير:', error);
-      setError('حدث خطأ أثناء تفعيل المدير. يرجى المحاولة مرة أخرى.');
+      console.error('خطأ في تفعيل المشرف:', error);
+      setError('حدث خطأ أثناء تفعيل المشرف. يرجى المحاولة مرة أخرى.');
     }
   };
 
@@ -102,7 +102,7 @@ const AdminPage = () => {
           transition={{ duration: 0.5 }}
           className="text-4xl font-bold mb-8 text-zait text-center"
         >
-          لوحة تحكم المدير
+          لوحة تحكم المشرف
         </motion.h1>
 
         <AnimatePresence>
@@ -128,7 +128,7 @@ const AdminPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white rounded-lg shadow-lg p-6 mb-8"
           >
-            <h2 className="text-2xl font-semibold mb-4 text-zait">إضافة مدير جديد</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-zait">إضافة مشرف جديد</h2>
             <div className="flex flex-col md:flex-row gap-4 ">
               <input
                 type="text"
@@ -158,7 +158,7 @@ const AdminPage = () => {
                 className="bg-zait text-white p-2 rounded-md hover:bg-gray-600 transition duration-300 flex items-center justify-center"
               >
                 <PlusCircle className="mr-2" size={20} />
-                إضافة مدير
+                إضافة مشرف
               </motion.button>
             </div>
           </motion.section>
@@ -170,7 +170,7 @@ const AdminPage = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="bg-white rounded-lg shadow-lg overflow-hidden"
         >
-          <h2 className="text-2xl font-semibold p-6 border-b text-zait ">قائمة المديرين</h2>
+          <h2 className="text-2xl font-semibold p-6 border-b text-zait ">قائمة المشرفين</h2>
           <div className="overflow-x-auto">
             <table className="w-full bg-gray-400 ">
               <thead className="bg-gray-50 text-zait bg-gray-400">
