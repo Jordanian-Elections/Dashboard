@@ -113,6 +113,14 @@ const AdList = () => {
                     <td className="px-6 py-4">{ad.price}دينار أردني</td>
                     <td className="px-6 py-4">
                       <img src={ad.image_url} alt="Ad" className="w-32 h-32 object-cover rounded-lg shadow-md" />
+                      {/* <img
+          src={ad.image_url}
+          alt={`Ad for ${ad.candidate_name}`}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/400x300?text=صورة+غير+متوفرة';
+          }}
+        /> */}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 rounded text-l font-semibold

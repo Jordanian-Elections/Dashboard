@@ -249,7 +249,7 @@ const Home = () => {
               type="datetime-local"
               value={newElection.startDate}
               onChange={(e) => setNewElection({ ...newElection, startDate: e.target.value })}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-zait focus:border-zait sm:text-sm"
+              className="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:ring-zait focus:border-zait sm:text-sm"
               required
             />
           </div>
@@ -260,13 +260,13 @@ const Home = () => {
               type="datetime-local"
               value={newElection.endDate}
               onChange={(e) => setNewElection({ ...newElection, endDate: e.target.value })}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-zait focus:border-zait sm:text-sm"
+              className="mt-1 block w-full h-8 border border-gray-300 rounded-md shadow-sm focus:ring-zait focus:border-zait sm:text-sm"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-zait text-white font-semibold rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            className="w-full py-2 px-4 bg-zait text-white font-semibold rounded-md shadow-sm hover:bg-zait focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             إضافة
           </button>
@@ -284,7 +284,7 @@ const Home = () => {
               exit={{ opacity: 0 }}
             >
               <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
-                <h3 className="text-xl font-semibold mb-4">تحديث موعد الانتخابات</h3>
+                {/* <h3 className="text-xl font-semibold mb-4">تحديث موعد الانتخابات</h3> */}
                 <form onSubmit={handleUpdate} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700" htmlFor="startDate">تاريخ البداية</label>
@@ -327,7 +327,7 @@ const Home = () => {
         </AnimatePresence>
       </div>
 
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">مواعيد الانتخابات</h2>
         <ul className="space-y-4">
           {elections.map(election => (
@@ -353,7 +353,7 @@ const Home = () => {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 };
