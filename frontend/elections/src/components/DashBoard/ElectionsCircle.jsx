@@ -152,7 +152,7 @@ const ElectionsCircle = () => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-4xl font-bold mb-8 text-center text-zait">الدوائر والقوائم والمرشحون</h1>
+      <h1 className="text-4xl font-bold my-8 text-center text-zait">الدوائر والقوائم والمرشحون</h1>
       
       {loading && <p className="text-zait text-center">جارٍ التحميل...</p>}
       {error && <p className="text-red-600 text-center">{error}</p>}
@@ -164,8 +164,8 @@ const ElectionsCircle = () => {
             className="relative bg-white rounded-lg shadow-md overflow-hidden"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            whileHover={{ scale: 1.05 }}
+            // transition={{ duration: 0.4 }}
+            // whileHover={{ scale: 1.05 }}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-zait to-zait opacity-60"></div>
             <div className="relative p-6 text-white">

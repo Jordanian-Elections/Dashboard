@@ -667,9 +667,7 @@ exports.up = function(knex) {
       table.text('image_url').notNullable();
       table.text('description');
       table.integer('price').notNullable();
-      table.enu('ad_type', ['electoral', 'party', 'local']).notNullable();
-      table.timestamp('start_date').defaultTo(knex.fn.now());
-      table.timestamp('end_date').defaultTo(knex.fn.now());
+     
       table.timestamps(true, true);
     })
     .createTable('debates', table => {

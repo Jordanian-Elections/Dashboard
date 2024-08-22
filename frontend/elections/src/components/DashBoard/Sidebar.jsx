@@ -66,10 +66,10 @@ const Sidebar = () => {
 
     // قسم الإدارة والمستخدمين
     { to: "/AdminDashboard/UserManagement", icon: faUsers, label: "إدارة المستخدمين" },
-    { to: "/AdminDashboard/ElectionsCircle", icon: faChartBar, label: "الدوائر الانتخابية" },
+    // { to: "/AdminDashboard/ElectionsCircle", icon: faChartBar, label: "الدوائر الانتخابية" },
     
     // قسم البيانات والإعلانات
-    { to: "/AdminDashboard/Revenu", icon: faDollarSign, label: "الأرباح" },
+    { to: "/AdminDashboard/Revenu", icon: faDollarSign, label: "الايرادات" },
     { to: "/AdminDashboard/Ads", icon: faBullhorn, label: "الإعلانات" },
     { to: "/AdminDashboard/Result", icon: faVoteYea, label: "النتائج" },
     
@@ -78,8 +78,8 @@ const Sidebar = () => {
     { to: "/AdminDashboard/Messages", icon: faEnvelope, label: "الرسائل" },
     
     // قسم الطلبات
-    { to: "/AdminDashboard/Request", icon: faListAlt, label: "طلبات القوائم" },
-    { to: "/AdminDashboard/Debate", icon: faChalkboard, label: "طلبات المناظرة", unreadCount: unreadDebateRequests }, // إضافة العدد غير المقروء
+    // { to: "/AdminDashboard/Request", icon: faListAlt, label: "طلبات القوائم" },
+    { to: "/AdminDashboard/Debate", icon: faChalkboard, label: "طلبات المناظرة" }, // إضافة العدد غير المقروء
     { to: "/AdminDashboard/Debate-screen", icon: faPlus, label: "انشاء غرفة" },
     // { to: "/AdminDashboard/Settings", icon: faCog, label: "الإعدادات" },
   ];

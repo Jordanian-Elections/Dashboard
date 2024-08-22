@@ -49,7 +49,7 @@ const Home = () => {
         
         setStats(statsResponse.data);
         setChartData([
-          { name: "دائرة الزرقاء", participation: statsResponse.data.circleVotedPercentage },
+          { name: "دائرة الزرقاء", participation: statsResponse.data.partyVotedPercentage },
           { name: "دائرة عمان الأولى", participation: statsResponse.data.circleVotedPercentage },
           { name: "دائرة عمان الثالثة", participation: statsResponse.data.partyVotedPercentage },
         ]);
@@ -98,14 +98,17 @@ const Home = () => {
     return () => clearInterval(timer);
   }, [upcomingElection]);
 
+  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/over/election-times', newElection);
+      await axios.post('http://localhost:3001/api/over/election-times', {
+        start_date: newElection.startDate,
+        end_date: newElection.endDate,
+      });
       setNewElection({ startDate: '', endDate: '' });
       alert('تمت إضافة موعد الانتخابات بنجاح!');
-      const response = await axios.get('http://localhost:3001/api/over/election-times');
-      setElections(response.data);
     } catch (error) {
       alert("فشل في إضافة موعد الانتخابات: " + error.message);
     }
@@ -121,7 +124,7 @@ const Home = () => {
       });
       setSelectedElection(null);
       alert('تمت تحديث موعد الانتخابات بنجاح!');
-      const response = await axios.get('http://localhost:3001/api/over/election-times');
+      const response = await axios.get('http://localhost:3001/api/over/election-time');
       setElections(response.data);
     } catch (error) {
       alert("فشل في تحديث موعد الانتخابات: " + error.message);
@@ -234,7 +237,7 @@ const Home = () => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="participation" fill="#3F7A5E" />
+            <Bar dataKey="participation" fill="#3F7A5E" name="نسبة المشاركة"/>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -242,6 +245,7 @@ const Home = () => {
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">إضافة موعد الانتخابات</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          
           <div>
             <label className="block text-sm font-medium text-gray-700" htmlFor="startDate">تاريخ البداية</label>
             <input
@@ -274,7 +278,7 @@ const Home = () => {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">تحديث موعد الانتخابات</h2>
+        {/* <h2 className="text-2xl font-semibold mb-4">تحديث موعد الانتخابات</h2> */}
         <AnimatePresence>
           {selectedElection && (
             <motion.div 

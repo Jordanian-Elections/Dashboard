@@ -95,7 +95,7 @@ const Messages = () => {
             <table className="w-full text-sm text-right text-gray-500 bg-white rounded-lg overflow-hidden">
               <thead className="text-xl text-zait uppercase bg-gray-400">
                 <tr>
-                  {['رقم', 'الاسم', 'الهاتف', 'الموضوع', 'الرسالة', 'تاريخ', 'قراءة'].map((header) => (
+                  {['رقم', 'الاسم', 'الهاتف', 'الموضوع', 'الرسالة', 'تاريخ'].map((header) => (
                     <th key={header} className="px-6 py-3">{header}</th>
                   ))}
                 </tr>
@@ -136,14 +136,14 @@ const Messages = () => {
                           minute: '2-digit'
                         })}
                       </td>
-                      <td className="px-6 py-4">
+                      {/* <td className="px-6 py-4">
                         <input
                           type="checkbox"
                           checked={message.isRead}
                           onChange={() => handleMarkAsRead(message.id, message.isRead)}
                           className="form-checkbox h-4 w-4 text-blue-600"
                         />
-                      </td>
+                      </td> */}
                     </tr>
                   ))
                 ) : (
